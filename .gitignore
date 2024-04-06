@@ -2,6 +2,8 @@
 /bin/*
 !/bin/console
 /tools/var
+.castor.stub.php
+.php-version
 
 ###> symfony/framework-bundle ###
 /.env.local
