@@ -44,7 +44,7 @@ final class UserRepositoryTest extends KernelTestCase
         /** @var UserRepository $userRepository */
         $userRepository = $container->get(UserDoctrineRepository::class);
 
-        self::assertTrue($userRepository->isAlreadyUsed(Email::create('user+1@email.com')));
+        self::assertTrue($userRepository->isAlreadyUsed(Email::create('admin+1@email.com')));
 
         self::assertFalse($userRepository->isAlreadyUsed(Email::create('user@email.com')));
     }

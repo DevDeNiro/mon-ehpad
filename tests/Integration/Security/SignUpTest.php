@@ -76,7 +76,7 @@ final class SignUpTest extends ApiTestCase
         ];
 
         yield 'email non unique' => [
-            'email' => 'user+1@email.com',
+            'email' => 'admin+1@email.com',
             'password' => self::faker()->password(20),
             'expectedResponse' => [
                 [

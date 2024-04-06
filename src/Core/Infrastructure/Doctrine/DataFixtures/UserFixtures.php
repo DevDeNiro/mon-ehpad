@@ -2,21 +2,30 @@
 
 namespace App\Core\Infrastructure\Doctrine\DataFixtures;
 
-use App\Core\Infrastructure\Doctrine\Entity\User;
+use App\Security\Domain\UseCase\SignUp\NewUser;
+use App\Security\Domain\UseCase\SignUp\SignUp;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Uid\Ulid;
 
 final class UserFixtures extends Fixture
 {
+    public function __construct(private readonly SignUp $signUp)
+    {
+    }
+
     public function load(ObjectManager $manager): void
     {
-        $user = new User();
-        $user->id = new Ulid();
-        $user->email = 'user+1@email.com';
-        $user->password = 'password';
-        $manager->persist($user);
+        ($this->signUp)(self::createNewUser());
+    }
 
-        $manager->flush();
+    private static function createNewUser(
+        string $email = 'admin+1@email.com',
+        string $password = 'password'
+    ): NewUser {
+        $newUser = new NewUser();
+        $newUser->email = $email;
+        $newUser->password = $password;
+
+        return $newUser;
     }
 }

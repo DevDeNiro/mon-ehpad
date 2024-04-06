@@ -10,12 +10,21 @@ use App\Security\Domain\ValueObject\Email;
 
 final class FakeUserRepository implements UserRepository
 {
-    /** @var array<User> */
+    /**
+     * @var array<int, User>
+     */
     public array $users = [];
+
+    /**
+     * @var array<string, User>
+     */
+    public array $emailIndexes = [];
 
     public function register(User $user): void
     {
-        $this->users[] = $user;
+        $objectId = spl_object_id($user);
+        $this->users[$objectId] = $user;
+        $this->emailIndexes[$user->email()->value()] = &$this->users[$objectId];
     }
 
     public function isAlreadyUsed(Email $email): bool

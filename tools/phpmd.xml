@@ -7,7 +7,9 @@
     <description>
         This ruleset contains a collection of rules.
     </description>
-    <rule ref="rulesets/unusedcode.xml" />
+    <rule ref="rulesets/unusedcode.xml">
+        <exclude name="UnusedFormalParameter" />
+    </rule>
     <rule ref="rulesets/cleancode.xml">
         <exclude name="StaticAccess" />
         <exclude name="MissingImport" />

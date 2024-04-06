@@ -6,9 +6,8 @@ namespace App\Security\Domain\ValueObject;
 
 final class Email
 {
-    private function __construct(
-        private string $value
-    ) {
+    private function __construct(private string $value)
+    {
     }
 
     public static function create(string $email): self
