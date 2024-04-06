@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Security\Domain\ValueObject;
+namespace App\Core\Domain\ValueObject;
 
-final readonly class PlainPassword
+final readonly class FullName
 {
     private function __construct(private string $value)
     {
     }
 
-    public static function create(string $plainPassword): self
+    public static function create(string $fullName): self
     {
-        return new self($plainPassword);
+        return new self($fullName);
     }
 
     public function value(): string

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Security\Domain\ValueObject;
+namespace App\Core\Domain\ValueObject;
 
-final class Email
+final readonly class Email
 {
     private function __construct(private string $value)
     {

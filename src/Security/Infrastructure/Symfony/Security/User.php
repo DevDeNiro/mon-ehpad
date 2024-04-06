@@ -4,17 +4,37 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Symfony\Security;
 
-use App\Security\Domain\ValueObject\Password;
+use App\Security\Domain\Entity\User as DomainUser;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-final readonly class User implements PasswordAuthenticatedUserInterface
+final readonly class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public function __construct(private ?Password $password = null)
+    private function __construct(private DomainUser $user)
     {
     }
 
-    public function getPassword(): ?string
+    public static function create(DomainUser $user): self
     {
-        return null !== $this->password ? (string) $this->password : null;
+        return new self($user);
+    }
+
+    public function getPassword(): string
+    {
+        return $this->user->password()->value();
+    }
+
+    public function getRoles(): array
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->user->email()->value();
     }
 }

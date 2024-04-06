@@ -13,8 +13,12 @@ services:
             - '../src/Core/Domain/ValueModel/'
             - '../src/Core/Infrastructure/Doctrine/Entity/'
             - '../src/Core/Infrastructure/Doctrine/Repository/'
+            - '../src/Core/Infrastructure/Notifier/'
+            - '../src/Core/Infrastructure/Symfony/Kernel.php'
+            - '../src/Security/Domain/ValueModel/'
+            - '../src/Security/Domain/Entity/'
             - '../src/Security/Infrastructure/Hasher/'
-            - '../src/Kernel.php'
+            - '../src/Security/Infrastructure/LoginLink/'
 
     Tests\Fixtures\:
         resource: '../tests/Fixtures/'

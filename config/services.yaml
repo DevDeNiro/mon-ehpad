@@ -12,4 +12,6 @@ services:
         exclude:
             - '../src/Core/Domain/ValueModel/'
             - '../src/Core/Infrastructure/Doctrine/Entity/'
-            - '../src/Kernel.php'
+            - '../src/Core/Infrastructure/Symfony/Kernel.php'
+            - '../src/Security/Domain/ValueModel/'
+            - '../src/Security/Domain/Entity/'

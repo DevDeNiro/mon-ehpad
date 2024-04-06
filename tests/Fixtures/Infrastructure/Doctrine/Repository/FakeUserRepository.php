@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Infrastructure\Doctrine\Repository;
 
+use App\Core\Domain\ValueObject\Email;
 use App\Security\Domain\Entity\User;
 use App\Security\Domain\Repository\UserRepository;
-use App\Security\Domain\ValueObject\Email;
 
 final class FakeUserRepository implements UserRepository
 {
@@ -30,5 +30,10 @@ final class FakeUserRepository implements UserRepository
     public function isAlreadyUsed(Email $email): bool
     {
         return count(array_filter($this->users, static fn (User $user) => $user->email()->equals($email))) > 0;
+    }
+
+    public function findByEmail(Email $email): ?User
+    {
+        return $this->emailIndexes[$email->value()] ?? null;
     }
 }

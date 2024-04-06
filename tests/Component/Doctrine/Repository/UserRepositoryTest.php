@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Component\Doctrine\Repository;
 
-use App\Core\Domain\ValueObject\Identifier;
+use App\Core\Domain\ValueObject\Email;
 use App\Core\Infrastructure\Doctrine\Repository\UserDoctrineRepository;
 use App\Security\Domain\Entity\User;
 use App\Security\Domain\Repository\UserRepository;
-use App\Security\Domain\ValueObject\Email;
 use App\Security\Domain\ValueObject\Password;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -26,8 +25,7 @@ final class UserRepositoryTest extends KernelTestCase
         /** @var UserRepository $userRepository */
         $userRepository = $container->get(UserDoctrineRepository::class);
 
-        $user = new User(
-            Identifier::generate(),
+        $user = User::register(
             Email::create('user@email.com'),
             Password::create('password')
         );
@@ -35,6 +33,18 @@ final class UserRepositoryTest extends KernelTestCase
         $userRepository->register($user);
 
         self::assertTrue($userRepository->isAlreadyUsed(Email::create('user@email.com')));
+    }
+
+    public function testFindByEmail(): void
+    {
+        $container = static::getContainer();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $container->get(UserDoctrineRepository::class);
+
+        $user = $userRepository->findByEmail(Email::create('admin+1@email.com'));
+
+        self::assertInstanceOf(User::class, $user);
     }
 
     public function testIsAlreadyRegistered(): void

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Hasher;
 
+use App\Core\Domain\ValueObject\Email;
+use App\Security\Domain\Entity\User;
 use App\Security\Domain\Hasher\PasswordHasherInterface;
 use App\Security\Domain\ValueObject\Password;
 use App\Security\Domain\ValueObject\PlainPassword;
-use App\Security\Infrastructure\Symfony\Security\User;
+use App\Security\Infrastructure\Symfony\Security\User as SymfonyUser;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final readonly class PasswordHasher implements PasswordHasherInterface
@@ -18,13 +20,18 @@ final readonly class PasswordHasher implements PasswordHasherInterface
 
     public function hash(PlainPassword $plainPassword): Password
     {
-        $symfonyUser = new User();
+        $symfonyUser = SymfonyUser::create(
+            User::register(
+                Email::create('fake@email.com'),
+                Password::create('fake_password')
+            )
+        );
 
         return Password::create($this->userPasswordHasher->hashPassword($symfonyUser, $plainPassword->value()));
     }
 
-    public function verify(PlainPassword $plainPassword, Password $password): bool
+    public function verify(PlainPassword $plainPassword, User $user): bool
     {
-        return $this->userPasswordHasher->isPasswordValid(new User($password), $plainPassword->value());
+        return $this->userPasswordHasher->isPasswordValid(SymfonyUser::create($user), $plainPassword->value());
     }
 }

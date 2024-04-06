@@ -6,7 +6,7 @@ namespace App\Core\Domain\ValueObject;
 
 use Symfony\Component\Uid\Ulid;
 
-final class Identifier
+final readonly class Identifier
 {
     public function __construct(private Ulid $value)
     {
@@ -15,6 +15,11 @@ final class Identifier
     public static function generate(): self
     {
         return new self(new Ulid());
+    }
+
+    public static function fromUlid(Ulid $value): self
+    {
+        return new self($value);
     }
 
     public function value(): Ulid

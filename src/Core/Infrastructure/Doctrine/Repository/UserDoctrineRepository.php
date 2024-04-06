@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Core\Infrastructure\Doctrine\Repository;
 
+use App\Core\Domain\ValueObject\Email;
+use App\Core\Domain\ValueObject\Identifier;
 use App\Core\Infrastructure\Doctrine\Entity\User as DoctrineUser;
 use App\Security\Domain\Entity\User;
 use App\Security\Domain\Repository\UserRepository;
-use App\Security\Domain\ValueObject\Email;
+use App\Security\Domain\ValueObject\Password;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -35,5 +37,17 @@ final class UserDoctrineRepository extends ServiceEntityRepository implements Us
             ->setParameter('email', $email->value())
             ->getQuery()
             ->getSingleScalarResult() > 0;
+    }
+
+    public function findByEmail(Email $email): ?User
+    {
+        /** @var DoctrineUser|null $doctrineUser */
+        $doctrineUser = $this->findOneBy(['email' => $email->value()]);
+
+        return null === $doctrineUser ? null : User::create(
+            Identifier::fromUlid($doctrineUser->id),
+            Email::create($doctrineUser->email),
+            Password::create($doctrineUser->password)
+        );
     }
 }

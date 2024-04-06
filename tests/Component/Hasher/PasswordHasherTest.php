@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hasher;
+namespace Tests\Component\Hasher;
 
-use App\Security\Domain\Hasher\PasswordHasherInterface;
+use App\Core\Domain\ValueObject\Email;
+use App\Security\Domain\Entity\User;
 use App\Security\Domain\ValueObject\PlainPassword;
 use App\Security\Infrastructure\Hasher\PasswordHasher;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-final class PasswordHasherTest extends WebTestCase
+final class PasswordHasherTest extends KernelTestCase
 {
     protected function setUp(): void
     {
@@ -20,15 +22,20 @@ final class PasswordHasherTest extends WebTestCase
     {
         $container = static::getContainer();
 
-        /** @var PasswordHasherInterface $passwordHasher */
-        $passwordHasher = $container->get(PasswordHasher::class);
+        /** @var UserPasswordHasherInterface $userPasswordHasher */
+        $userPasswordHasher = $container->get(UserPasswordHasherInterface::class);
+
+        $passwordHasher = new PasswordHasher($userPasswordHasher);
 
         $plainPassword = PlainPassword::create('password');
 
         self::assertTrue(
             $passwordHasher->verify(
                 $plainPassword,
-                $plainPassword->hash($passwordHasher)
+                User::register(
+                    Email::create(''),
+                    $passwordHasher->hash($plainPassword)
+                )
             )
         );
     }

@@ -5,3 +5,9 @@ security_controllers:
     type: attribute
     prefix: /api/security/
     name_prefix: security_
+login_check:
+    path: /login_check
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        path: 'https://legacy.example.com/doc'
+        permanent: true

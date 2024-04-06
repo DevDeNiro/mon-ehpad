@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Security\Domain\ValueObject;
 
-final class Password implements \Stringable
+final readonly class Password
 {
     private function __construct(private string $value)
     {
@@ -16,11 +16,6 @@ final class Password implements \Stringable
     }
 
     public function value(): string
-    {
-        return $this->value;
-    }
-
-    public function __toString(): string
     {
         return $this->value;
     }

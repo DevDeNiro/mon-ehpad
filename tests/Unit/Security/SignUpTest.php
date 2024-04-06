@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Security;
 
+use App\Core\Domain\ValueObject\Email;
 use App\Security\Domain\UseCase\SignUp\NewUser;
 use App\Security\Domain\UseCase\SignUp\SignUp;
 use App\Security\Domain\Validator\UniqueEmailValidator;
-use App\Security\Domain\ValueObject\Email;
 use Tests\FakerTrait;
 use Tests\Fixtures\Infrastructure\Doctrine\Repository\FakeUserRepository;
+use Tests\Fixtures\Infrastructure\LoginLink\FakeLoginLinkGenerator;
 use Tests\Fixtures\Infrastructure\Symfony\Hasher\PasswordHash;
 use Tests\Unit\UseCaseTestCase;
 
@@ -25,7 +26,15 @@ final class SignUpTest extends UseCaseTestCase
         $this->setValidator([
             UniqueEmailValidator::class => new UniqueEmailValidator($this->userRepository),
         ]);
-        $this->setUseCase(new SignUp($this->userRepository, new PasswordHash()));
+
+        $this->setUseCase(
+            new SignUp(
+                $this->userRepository,
+                new PasswordHash(),
+                self::notifier(),
+                new FakeLoginLinkGenerator()
+            )
+        );
     }
 
     public function testShouldSignUp(): void
@@ -38,6 +47,7 @@ final class SignUpTest extends UseCaseTestCase
 
         self::assertTrue($this->userRepository->isAlreadyUsed(Email::create($newUser->email)));
         self::assertSame('hashed_password', $this->userRepository->emailIndexes[$newUser->email]->password()->value());
+        self::assertEmailSent();
     }
 
     /**
