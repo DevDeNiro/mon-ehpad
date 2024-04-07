@@ -47,6 +47,26 @@ final class UserRepositoryTest extends KernelTestCase
         self::assertInstanceOf(User::class, $user);
     }
 
+    public function testConfirm(): void
+    {
+        $container = static::getContainer();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $container->get(UserDoctrineRepository::class);
+
+        /** @var User $user */
+        $user = $userRepository->findByEmail(Email::create('admin+1@email.com'));
+
+        $user->confirm();
+
+        $userRepository->confirm($user);
+
+        /** @var User $user */
+        $user = $userRepository->findByEmail(Email::create('admin+1@email.com'));
+
+        self::assertTrue($user->isActive());
+    }
+
     public function testIsAlreadyRegistered(): void
     {
         $container = static::getContainer();

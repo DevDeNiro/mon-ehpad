@@ -19,6 +19,11 @@ final readonly class User implements UserInterface, PasswordAuthenticatedUserInt
         return new self($user);
     }
 
+    public function user(): DomainUser
+    {
+        return $this->user;
+    }
+
     public function getPassword(): string
     {
         return $this->user->password()->value();

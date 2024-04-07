@@ -15,3 +15,6 @@ services:
             - '../src/Core/Infrastructure/Symfony/Kernel.php'
             - '../src/Security/Domain/ValueModel/'
             - '../src/Security/Domain/Entity/'
+
+    app.security.user_provider:
+        class: App\Security\Infrastructure\Symfony\Security\UserProvider

@@ -15,8 +15,8 @@ services:
             - '../src/Core/Infrastructure/Doctrine/Repository/'
             - '../src/Core/Infrastructure/Notifier/'
             - '../src/Core/Infrastructure/Symfony/Kernel.php'
-            - '../src/Security/Domain/ValueModel/'
             - '../src/Security/Domain/Entity/'
+            - '../src/Security/Domain/ValueModel/'
             - '../src/Security/Infrastructure/Hasher/'
             - '../src/Security/Infrastructure/LoginLink/'
 

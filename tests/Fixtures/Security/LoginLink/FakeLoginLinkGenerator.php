@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Fixtures\Infrastructure\LoginLink;
+namespace Tests\Fixtures\Security\LoginLink;
 
 use App\Core\Domain\ValueObject\Url;
 use App\Security\Domain\Entity\User;

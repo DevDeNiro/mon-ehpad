@@ -9,9 +9,9 @@ use App\Security\Domain\UseCase\SignUp\NewUser;
 use App\Security\Domain\UseCase\SignUp\SignUp;
 use App\Security\Domain\Validator\UniqueEmailValidator;
 use Tests\FakerTrait;
-use Tests\Fixtures\Infrastructure\Doctrine\Repository\FakeUserRepository;
-use Tests\Fixtures\Infrastructure\LoginLink\FakeLoginLinkGenerator;
-use Tests\Fixtures\Infrastructure\Symfony\Hasher\PasswordHash;
+use Tests\Fixtures\Core\Doctrine\Repository\FakeUserRepository;
+use Tests\Fixtures\Security\Hasher\FakePasswordHash;
+use Tests\Fixtures\Security\LoginLink\FakeLoginLinkGenerator;
 use Tests\Unit\UseCaseTestCase;
 
 final class SignUpTest extends UseCaseTestCase
@@ -30,7 +30,7 @@ final class SignUpTest extends UseCaseTestCase
         $this->setUseCase(
             new SignUp(
                 $this->userRepository,
-                new PasswordHash(),
+                new FakePasswordHash(),
                 self::notifier(),
                 new FakeLoginLinkGenerator()
             )
@@ -41,20 +41,31 @@ final class SignUpTest extends UseCaseTestCase
     {
         $newUser = new NewUser();
         $newUser->email = 'user@email.com';
-        $newUser->password = 'password';
+        $newUser->password = '4234df00-45dd-49a4-b303-a75dbf8b10d8!';
 
         $this->handle($newUser);
 
         self::assertTrue($this->userRepository->isAlreadyUsed(Email::create($newUser->email)));
-        self::assertSame('hashed_password', $this->userRepository->emailIndexes[$newUser->email]->password()->value());
+        self::assertSame('hashed_password', $this->userRepository->users[$newUser->email]->password()->value());
         self::assertEmailSent();
     }
 
     /**
+     * @dataProvider provideInvalidData
+     *
+     * @param array<array{propertyPath: string, message: string}> $expectedViolations
+     */
+    public function testShouldRaiseValidationFailedException(array $expectedViolations, NewUser $newUser): void
+    {
+        $this->expectedViolations($expectedViolations);
+        $this->handle($newUser);
+    }
+
+    /**
      * @return iterable<array{
-     *     expectedViolations: array<array{propertyPath: string,
-     *     message: string
-     * }>, input: NewUser}>
+     *     expectedViolations: array<array{propertyPath: string, message: string}>,
+     *     newUser: NewUser
+     * }>
      */
     public static function provideInvalidData(): iterable
     {
@@ -65,7 +76,7 @@ final class SignUpTest extends UseCaseTestCase
                     'message' => 'This value should not be blank.',
                 ],
             ],
-            'input' => self::createNewUser('', self::faker()->password(20)),
+            'newUser' => self::createNewUser('', self::faker()->password(20)),
         ];
 
         yield 'invalid email' => [
@@ -75,7 +86,7 @@ final class SignUpTest extends UseCaseTestCase
                     'message' => 'This value is not a valid email address.',
                 ],
             ],
-            'input' => self::createNewUser('fail', self::faker()->password(20)),
+            'newUser' => self::createNewUser('fail', self::faker()->password(20)),
         ];
 
         yield 'non unique email' => [
@@ -85,7 +96,7 @@ final class SignUpTest extends UseCaseTestCase
                     'message' => 'This value is not a valid email address.',
                 ],
             ],
-            'input' => self::createNewUser('fail', self::faker()->password(20)),
+            'newUser' => self::createNewUser('fail', self::faker()->password(20)),
         ];
 
         yield 'blank password' => [
@@ -95,7 +106,7 @@ final class SignUpTest extends UseCaseTestCase
                     'message' => 'The password strength is too low. Please use a stronger password.',
                 ],
             ],
-            'input' => self::createNewUser('user@email.com', ''),
+            'newUser' => self::createNewUser('user@email.com', ''),
         ];
 
         yield 'compromised password' => [
@@ -105,7 +116,7 @@ final class SignUpTest extends UseCaseTestCase
                     'message' => 'This password has been leaked in a data breach, it must not be used. Please use another password.',
                 ],
             ],
-            'input' => self::createNewUser('user@email.com', 'Password123!'),
+            'newUser' => self::createNewUser('user@email.com', 'Password123!'),
         ];
     }
 

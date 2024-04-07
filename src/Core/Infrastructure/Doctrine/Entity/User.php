@@ -27,12 +27,16 @@ class User
     #[Column(type: Types::STRING)]
     public string $password;
 
+    #[Column(type: Types::STRING)]
+    public string $status;
+
     public static function fromSecurityUser(SecurityUser $user): self
     {
         $entity = new self();
         $entity->id = $user->id()->value();
         $entity->email = $user->email()->value();
         $entity->password = $user->password()->value();
+        $entity->status = $user->status()->value;
 
         return $entity;
     }

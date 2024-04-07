@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Fixtures\Infrastructure\Symfony\DependencyInjection;
+namespace Tests\Fixtures\Core\Symfony\DependencyInjection;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Validator\ConstraintValidatorInterface;

@@ -15,6 +15,7 @@ security:
                 check_route: login_check
                 signature_properties: ['userIdentifier']
                 max_uses: 1
+                success_handler: App\Security\Infrastructure\Symfony\Security\Authentication\AuthenticationSuccessHandler
     access_control:
 when@test:
     security:

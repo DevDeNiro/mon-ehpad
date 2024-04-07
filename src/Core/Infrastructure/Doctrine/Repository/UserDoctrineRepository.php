@@ -7,6 +7,7 @@ namespace App\Core\Infrastructure\Doctrine\Repository;
 use App\Core\Domain\ValueObject\Email;
 use App\Core\Domain\ValueObject\Identifier;
 use App\Core\Infrastructure\Doctrine\Entity\User as DoctrineUser;
+use App\Security\Domain\Entity\Status;
 use App\Security\Domain\Entity\User;
 use App\Security\Domain\Repository\UserRepository;
 use App\Security\Domain\ValueObject\Password;
@@ -47,7 +48,22 @@ final class UserDoctrineRepository extends ServiceEntityRepository implements Us
         return null === $doctrineUser ? null : User::create(
             Identifier::fromUlid($doctrineUser->id),
             Email::create($doctrineUser->email),
-            Password::create($doctrineUser->password)
+            Password::create($doctrineUser->password),
+            Status::from($doctrineUser->status)
         );
+    }
+
+    public function confirm(User $user): void
+    {
+        /** @var DoctrineUser|null $doctrineUser */
+        $doctrineUser = $this->findOneBy(['email' => $user->email()->value()]);
+
+        if (null === $doctrineUser) {
+            throw new \RuntimeException('User not found');
+        }
+
+        $doctrineUser->status = $user->status()->value;
+
+        $this->getEntityManager()->flush();
     }
 }

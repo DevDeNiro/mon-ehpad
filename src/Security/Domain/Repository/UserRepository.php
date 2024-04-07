@@ -14,4 +14,6 @@ interface UserRepository
     public function isAlreadyUsed(Email $email): bool;
 
     public function findByEmail(Email $email): ?User;
+
+    public function confirm(User $user): void;
 }

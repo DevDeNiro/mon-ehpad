@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Fixtures\Infrastructure\Notifier;
+namespace Tests\Fixtures\Core\Notifier;
 
 use App\Core\Domain\Notifier\Email\Email;
 use App\Core\Domain\Notifier\NotifierInterface;
