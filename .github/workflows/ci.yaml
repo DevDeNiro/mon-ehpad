@@ -32,8 +32,8 @@ jobs:
           curl -sS https://get.symfony.com/cli/installer | bash
           mv /home/runner/.symfony5/bin/symfony /usr/local/bin/symfony
       - name: Build
-        run: castor install --env=test
+        run: castor build --env=test
       - name: Tests
-        run: castor qa:tests
+        run: castor tests
       - name: Analysis
-        run: castor qa:analysis
+        run: castor analysis

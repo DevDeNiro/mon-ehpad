@@ -25,9 +25,7 @@ final class UniqueEmailValidator extends ConstraintValidator
             return;
         }
 
-        $value = $value instanceof Email ? $value : Email::create($value);
-
-        if (!$this->userRepository->isAlreadyUsed($value)) {
+        if (!$this->userRepository->isAlreadyUsed((string) $value)) {
             return;
         }
 

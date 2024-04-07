@@ -30,12 +30,12 @@ final class UserDoctrineRepository extends ServiceEntityRepository implements Us
         $this->getEntityManager()->flush();
     }
 
-    public function isAlreadyUsed(Email $email): bool
+    public function isAlreadyUsed(Email|string $email): bool
     {
         return $this->createQueryBuilder('u')
             ->select('COUNT(u.id)')
             ->where('u.email = :email')
-            ->setParameter('email', $email->value())
+            ->setParameter('email', (string) $email)
             ->getQuery()
             ->getSingleScalarResult() > 0;
     }

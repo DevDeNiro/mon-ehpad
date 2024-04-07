@@ -27,13 +27,13 @@ final class PasswordHasherTest extends KernelTestCase
 
         $passwordHasher = new PasswordHasher($userPasswordHasher);
 
-        $plainPassword = PlainPassword::create('password');
+        $plainPassword = PlainPassword::create('Password123!');
 
         self::assertTrue(
             $passwordHasher->verify(
                 $plainPassword,
                 User::register(
-                    Email::create(''),
+                    Email::create('user@email.com'),
                     $passwordHasher->hash($plainPassword)
                 )
             )

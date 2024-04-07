@@ -11,7 +11,7 @@ interface UserRepository
 {
     public function register(User $user): void;
 
-    public function isAlreadyUsed(Email $email): bool;
+    public function isAlreadyUsed(Email|string $email): bool;
 
     public function findByEmail(Email $email): ?User;
 

@@ -34,7 +34,7 @@ final class LoginLinkGeneratorTest extends KernelTestCase
         $url = $loginLinkGenerator->generate(
             User::register(
                 Email::create('user@email.com'),
-                Password::create('')
+                Password::create('Password123!')
             )
         );
 
