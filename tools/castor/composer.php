@@ -29,7 +29,7 @@ function depsRequire(
     #[AsOption] bool $dev = false,
 ): void {
     io()->title('Install new dependencies');
-    $command = ['composer require', $packages];
+    $command = ['composer', 'require', $packages];
     if ($dev) {
         $command[] = '--dev';
     }

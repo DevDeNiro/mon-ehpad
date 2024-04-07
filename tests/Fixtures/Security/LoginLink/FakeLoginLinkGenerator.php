@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Security\LoginLink;
 
-use App\Core\Domain\ValueObject\Url;
-use App\Security\Domain\Entity\User;
-use App\Security\Domain\LoginLink\LoginLinkGeneratorInterface;
+use App\Core\Domain\Model\ValueObject\Url;
+use App\Security\Domain\Model\Entity\User;
+use App\Security\Domain\Port\LoginLink\LoginLinkGeneratorInterface;
 
 final class FakeLoginLinkGenerator implements LoginLinkGeneratorInterface
 {

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Core\Doctrine\Repository;
 
-use App\Core\Domain\ValueObject\Email;
-use App\Security\Domain\Entity\User;
-use App\Security\Domain\Repository\UserRepository;
+use App\Core\Domain\Model\ValueObject\Email;
+use App\Core\Domain\Model\ValueObject\Identifier;
+use App\Security\Domain\Model\Entity\User;
+use App\Security\Domain\Port\Repository\UserRepository;
 
 final class FakeUserRepository implements UserRepository
 {
@@ -33,5 +34,16 @@ final class FakeUserRepository implements UserRepository
     public function confirm(User $user): void
     {
         $this->users[$user->email()->value()] = $user;
+    }
+
+    public function findById(Identifier $id): ?User
+    {
+        foreach ($this->users as $user) {
+            if ($user->id()->value()->equals($id->value())) {
+                return $user;
+            }
+        }
+
+        return null;
     }
 }

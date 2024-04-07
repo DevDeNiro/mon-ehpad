@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Component\Doctrine\Repository;
 
-use App\Core\Domain\ValueObject\Email;
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Infrastructure\Doctrine\Repository\UserDoctrineRepository;
-use App\Security\Domain\Entity\User;
-use App\Security\Domain\Repository\UserRepository;
-use App\Security\Domain\ValueObject\Password;
+use App\Security\Domain\Model\Entity\User;
+use App\Security\Domain\Model\ValueObject\Password;
+use App\Security\Domain\Port\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class UserRepositoryTest extends KernelTestCase

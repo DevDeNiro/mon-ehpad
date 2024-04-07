@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Core\Infrastructure\Doctrine\Repository;
 
-use App\Core\Domain\ValueObject\Email;
-use App\Core\Domain\ValueObject\Identifier;
+use App\Core\Domain\Model\ValueObject\Email;
+use App\Core\Domain\Model\ValueObject\Identifier;
 use App\Core\Infrastructure\Doctrine\Entity\User as DoctrineUser;
-use App\Security\Domain\Entity\Status;
-use App\Security\Domain\Entity\User;
-use App\Security\Domain\Repository\UserRepository;
-use App\Security\Domain\ValueObject\Password;
+use App\Security\Domain\Model\Entity\Status;
+use App\Security\Domain\Model\Entity\User;
+use App\Security\Domain\Model\Factory\CreateUserFactory;
+use App\Security\Domain\Model\ValueObject\Password;
+use App\Security\Domain\Port\Repository\UserRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,7 +20,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 final class UserDoctrineRepository extends ServiceEntityRepository implements UserRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private CreateUserFactory $factory)
     {
         parent::__construct($registry, DoctrineUser::class);
     }
@@ -45,12 +46,12 @@ final class UserDoctrineRepository extends ServiceEntityRepository implements Us
         /** @var DoctrineUser|null $doctrineUser */
         $doctrineUser = $this->findOneBy(['email' => $email->value()]);
 
-        return null === $doctrineUser ? null : User::create(
-            Identifier::fromUlid($doctrineUser->id),
-            Email::create($doctrineUser->email),
-            Password::create($doctrineUser->password),
-            Status::from($doctrineUser->status)
-        );
+        return null === $doctrineUser ? null : $this->factory
+            ->withId(Identifier::fromUlid($doctrineUser->id))
+            ->withEmail(Email::create($doctrineUser->email))
+            ->withPassword(Password::create($doctrineUser->password))
+            ->withStatus(Status::from($doctrineUser->status))
+            ->build();
     }
 
     public function confirm(User $user): void
@@ -65,5 +66,18 @@ final class UserDoctrineRepository extends ServiceEntityRepository implements Us
         $doctrineUser->status = $user->status()->value;
 
         $this->getEntityManager()->flush();
+    }
+
+    public function findById(Identifier $id): ?User
+    {
+        /** @var DoctrineUser|null $doctrineUser */
+        $doctrineUser = $this->findOneBy(['id' => $id->value()->toBinary()]);
+
+        return null === $doctrineUser ? null : $this->factory
+            ->withId(Identifier::fromUlid($doctrineUser->id))
+            ->withEmail(Email::create($doctrineUser->email))
+            ->withPassword(Password::create($doctrineUser->password))
+            ->withStatus(Status::from($doctrineUser->status))
+            ->build();
     }
 }

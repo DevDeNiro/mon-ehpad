@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Core\Notifier;
 
-use App\Core\Domain\Notifier\Email\Email;
-use App\Core\Domain\Notifier\NotifierInterface;
+use App\Core\Domain\Model\Notification\Email;
+use App\Core\Domain\Port\Notifier\NotifierInterface;
 
 final class FakeNotifier implements NotifierInterface
 {

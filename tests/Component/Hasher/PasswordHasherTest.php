@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Component\Hasher;
 
-use App\Core\Domain\ValueObject\Email;
-use App\Security\Domain\Entity\User;
-use App\Security\Domain\ValueObject\PlainPassword;
+use App\Core\Domain\Model\ValueObject\Email;
+use App\Security\Domain\Model\Entity\User;
+use App\Security\Domain\Model\ValueObject\PlainPassword;
 use App\Security\Infrastructure\Hasher\PasswordHasher;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

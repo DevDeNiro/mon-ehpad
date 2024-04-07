@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Infrastructure\Notifier;
 
-use App\Core\Domain\Notifier\Email\Email;
-use App\Core\Domain\Notifier\NotifierInterface;
+use App\Core\Domain\Model\Notification\Email;
+use App\Core\Domain\Port\Notifier\NotifierInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as SymfonyEmail;

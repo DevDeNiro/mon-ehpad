@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Security;
+namespace Tests\Unit\Security;
 
-use App\Core\Domain\ValueObject\Email;
-use App\Security\Domain\Entity\User;
+use App\Core\Domain\Model\ValueObject\Email;
+use App\Security\Domain\Model\Factory\RegisterUserFactory;
+use App\Security\Domain\Model\ValueObject\Password;
 use App\Security\Domain\UseCase\ConfirmRegistration\ConfirmRegistration;
 use App\Security\Domain\UseCase\ConfirmRegistration\VerifiedUser;
-use App\Security\Domain\ValueObject\Password;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Validator\Constraints\ExpressionValidator;
 use Tests\Fixtures\Core\Doctrine\Repository\FakeUserRepository;
@@ -18,6 +18,8 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
 {
     private FakeUserRepository $userRepository;
 
+    private RegisterUserFactory $factory;
+
     protected function setUp(): void
     {
         $this->userRepository = new FakeUserRepository();
@@ -25,14 +27,15 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             'validator.expression' => new ExpressionValidator(new ExpressionLanguage()),
         ]);
         $this->setUseCase(new ConfirmRegistration($this->userRepository));
+        $this->factory = self::entityFactory(RegisterUserFactory::class);
     }
 
     public function testShouldConfirmRegistration(): void
     {
-        $user = User::register(
-            Email::create('user@email.com'),
-            Password::create('hashed_password')
-        );
+        $user = $this->factory
+            ->withEmail(Email::create('user@email.com'))
+            ->withPassword(Password::create('hashed_password'))
+            ->build();
 
         $this->userRepository->register($user);
 
@@ -45,10 +48,10 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
 
     public function testShouldRaiseAndExceptionDueToUserAlreadyActive(): void
     {
-        $user = User::register(
-            Email::create('user@email.com'),
-            Password::create('hashed_password')
-        );
+        $user = $this->factory
+            ->withEmail(Email::create('user@email.com'))
+            ->withPassword(Password::create('hashed_password'))
+            ->build();
 
         $this->userRepository->register($user);
         $user->confirm();
@@ -56,7 +59,12 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
 
         $verifiedUser = new VerifiedUser($user);
 
-        $this->expectedViolations([]);
+        $this->expectedViolations([
+            [
+                'propertyPath' => '',
+                'message' => 'User is already verified.',
+            ],
+        ]);
 
         $this->handle($verifiedUser);
     }

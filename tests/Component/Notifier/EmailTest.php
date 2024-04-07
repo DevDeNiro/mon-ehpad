@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Tests\Component\Notifier;
 
-use App\Core\Domain\ValueObject\Email as EmailValueObject;
-use App\Core\Domain\Notifier\Email\Email;
-use App\Core\Domain\ValueObject\Url;
+use App\Core\Domain\Model\Notification\Email;
+use App\Core\Domain\Model\ValueObject\Email as EmailValueObject;
+use App\Core\Domain\Model\ValueObject\Url;
 use App\Core\Infrastructure\Notifier\Notifier;
-use App\Security\Domain\Entity\User;
-use App\Security\Domain\Notifier\EmailVerification;
-use App\Security\Domain\ValueObject\Password;
+use App\Security\Domain\Model\Notification\EmailVerification;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
 use Symfony\Component\Mailer\MailerInterface;
+use Tests\EntityFactoryTrait;
 
 final class EmailTest extends KernelTestCase
 {
     use MailerAssertionsTrait;
+    use EntityFactoryTrait;
 
     protected function setUp(): void
     {
@@ -45,10 +45,7 @@ final class EmailTest extends KernelTestCase
     {
         yield 'email verification' => [
             'email' => EmailVerification::create(
-                User::register(
-                    EmailValueObject::create('admin+1@email.com'),
-                    Password::create('password')
-                ),
+                EmailValueObject::create('admin+1@email.com'),
                 Url::create('http://localhost/login_check')
             ),
             'expectedEmail' => 'admin+1@email.com',

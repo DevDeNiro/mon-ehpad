@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Core\Infrastructure\Doctrine\Entity;
 
+use App\Security\Domain\Model\Entity\User as SecurityUser;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
-use App\Security\Domain\Entity\User as SecurityUser;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Uid\Ulid;
 

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Hasher;
 
-use App\Core\Domain\ValueObject\Email;
-use App\Security\Domain\Entity\User;
-use App\Security\Domain\Hasher\PasswordHasherInterface;
-use App\Security\Domain\ValueObject\Password;
-use App\Security\Domain\ValueObject\PlainPassword;
+use App\Core\Domain\Model\ValueObject\Email;
+use App\Security\Domain\Model\Entity\User;
+use App\Security\Domain\Model\ValueObject\Password;
+use App\Security\Domain\Model\ValueObject\PlainPassword;
+use App\Security\Domain\Port\Hasher\PasswordHasherInterface;
 use App\Security\Infrastructure\Symfony\Security\User as SymfonyUser;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 

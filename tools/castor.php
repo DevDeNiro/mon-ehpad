@@ -13,6 +13,7 @@ import(__DIR__.'/castor/composer.php');
 import(__DIR__.'/castor/database.php');
 import(__DIR__.'/castor/docker.php');
 import(__DIR__.'/castor/fix.php');
+import(__DIR__.'/castor/git.php');
 import(__DIR__.'/castor/symfony.php');
 import(__DIR__.'/castor/tests.php');
 

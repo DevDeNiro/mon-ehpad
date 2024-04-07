@@ -10,13 +10,15 @@ services:
     App\:
         resource: '../src/'
         exclude:
-            - '../src/Core/Domain/ValueModel/'
+            - '../src/Core/Domain/Model/ValueObject/'
+            - '../src/Core/Domain/Model/Notification/'
+            - '../src/Core/Domain/Model/Entity/'
             - '../src/Core/Infrastructure/Doctrine/Entity/'
-            - '../src/Core/Infrastructure/Doctrine/Repository/'
-            - '../src/Core/Infrastructure/Notifier/'
             - '../src/Core/Infrastructure/Symfony/Kernel.php'
-            - '../src/Security/Domain/Entity/'
-            - '../src/Security/Domain/ValueModel/'
+            - '../src/Security/Domain/Model/Entity/'
+            - '../src/Security/Domain/Model/ValueObject/'
+            - '../src/Security/Domain/Model/Notification/'
+            - '../src/Core/Infrastructure/Notifier/'
             - '../src/Security/Infrastructure/Hasher/'
             - '../src/Security/Infrastructure/LoginLink/'
 

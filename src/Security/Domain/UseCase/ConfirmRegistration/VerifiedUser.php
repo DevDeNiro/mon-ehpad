@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Security\Domain\UseCase\ConfirmRegistration;
 
 use App\Core\Domain\CQRS\Command;
-use App\Security\Domain\Entity\User;
+use App\Security\Domain\Model\Entity\User;
 use Symfony\Component\Validator\Constraints\Expression;
 
 #[Expression('this.user().isWaitingForConfirmation()', message: 'User is already verified.')]

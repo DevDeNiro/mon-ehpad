@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Symfony\Security;
 
-use App\Core\Domain\ValueObject\Email;
-use App\Security\Domain\Repository\UserRepository;
+use App\Core\Domain\Model\ValueObject\Email;
+use App\Security\Domain\Port\Repository\UserRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface as TUser;

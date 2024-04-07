@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Security\Domain\UseCase\ConfirmRegistration;
 
 use App\Core\Domain\CQRS\Handler;
-use App\Security\Domain\Repository\UserRepository;
+use App\Security\Domain\Port\Repository\UserRepository;
 
 final readonly class ConfirmRegistration implements Handler
 {

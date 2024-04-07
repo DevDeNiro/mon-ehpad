@@ -61,6 +61,12 @@
                   "code": ":zap:",
                   "description": "Improve performance.",
                   "name": "perf"
+                },
+                {
+                  "emoji": "⚙️",
+                  "code": ":cog:",
+                  "description": "Refactor or improve code.",
+                  "name": "chore"
                 }
             ]
         }

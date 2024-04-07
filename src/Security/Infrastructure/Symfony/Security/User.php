@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Symfony\Security;
 
-use App\Security\Domain\Entity\User as DomainUser;
+use App\Security\Domain\Model\Entity\User as DomainUser;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 

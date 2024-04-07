@@ -7,18 +7,21 @@ namespace Tests\Unit;
 use App\Core\Domain\CQRS\Command;
 use App\Core\Domain\CQRS\Handler;
 use App\Core\Domain\CQRS\Query;
+use Cake\Chronos\Chronos;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
 use Symfony\Component\Validator\ContainerConstraintValidatorFactory;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Tests\EntityFactoryTrait;
 use Tests\Fixtures\Core\Notifier\FakeNotifier;
 use Tests\Fixtures\Core\Symfony\DependencyInjection\ValidatorContainer;
 
 abstract class UseCaseTestCase extends TestCase
 {
     use UseCaseAssertionsTrait;
+    use EntityFactoryTrait;
 
     protected ?Handler $useCase = null;
 
@@ -68,6 +71,11 @@ abstract class UseCaseTestCase extends TestCase
         $this->useCase = $useCase;
     }
 
+    protected static function setTestNow(Chronos $now): void
+    {
+        Chronos::setTestNow($now);
+    }
+
     protected function handle(Command|Query $input): mixed
     {
         if (null === $this->useCase) {
@@ -84,7 +92,19 @@ abstract class UseCaseTestCase extends TestCase
             throw new \RuntimeException('Use case must have a return type.');
         }
 
-        $this->validate($input);
+        try {
+            $this->validate($input);
+        } catch (ValidationFailedException $e) {
+            if (null != $this->getExpectedException() && ValidationFailedException::class === $this->getExpectedException()) {
+                self::assertCount(count($this->expectedViolations), $e->getViolations());
+                foreach ($this->expectedViolations as $key => $expectedViolation) {
+                    self::assertSame($expectedViolation['propertyPath'], $e->getViolations()->get($key)->getPropertyPath());
+                    self::assertSame($expectedViolation['message'], $e->getViolations()->get($key)->getMessage());
+                }
+            }
+
+            throw $e;
+        }
 
         if ('void' === $method->getReturnType()->getName()) {
             $method->invoke($this->useCase, $input);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Security\Domain\UseCase\SignUp;
 
 use App\Core\Domain\CQRS\Command;
-use App\Security\Domain\Validator\UniqueEmail;
+use App\Security\Domain\Validation\Validator\UniqueEmail;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class NewUser implements Command
