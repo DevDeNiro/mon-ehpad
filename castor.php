@@ -12,6 +12,7 @@ use function Castor\run;
 function install(#[AsOption] ?string $env = null): void
 {
     io()->title('Install the project');
+    dockerBuild();
     depsInstall();
     if (null === $env) {
         db();
@@ -19,6 +20,13 @@ function install(#[AsOption] ?string $env = null): void
     } else {
         db($env);
     }
+}
+
+#[AsTask(name: 'docker:build', description: 'Docker build')]
+function dockerBuild(): void
+{
+    io()->title('Docker build');
+    run('docker-compose -f "docker-compose.yml" up -d --build');
 }
 
 #[AsTask(name: 'deps:update', description: 'Update dependencies')]

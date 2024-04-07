@@ -1,7 +1,5 @@
 name: Continuous integration
 on: [push]
-env:
-  DATABASE_URL: postgresql://app:!ChangeMe!@127.0.0.1:5432/mon-ehpad?serverVersion=16&charset=utf8
 jobs:
   ci:
     name: Continuous Integration
@@ -11,19 +9,6 @@ jobs:
       matrix:
         operating-system: [ubuntu-latest]
         php-versions: ['8.3']
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: "!ChangeMe!"
-          POSTGRES_USER: app
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
     steps:
       - name: Checkout
         uses: actions/checkout@v2
