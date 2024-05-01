@@ -13,11 +13,11 @@ doctrine:
         controller_resolver:
             auto_mapping: true
         mappings:
-            App:
+            Security:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Core/Infrastructure/Doctrine/Entity'
-                prefix: 'App\Core\Infrastructure\Doctrine\Entity'
+                dir: '%kernel.project_dir%/src/Security/Infrastructure/Doctrine/Entity'
+                prefix: 'App\Security\Infrastructure\Doctrine\Entity'
 
 when@test:
     doctrine:

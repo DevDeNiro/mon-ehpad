@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Security;
 
+use App\Core\Domain\Model\ValueObject\Email;
+use App\Security\Domain\Model\Event\UserRegistered;
+use App\Security\Domain\Port\Repository\UserRepository;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\FakerTrait;
 use Tests\Integration\ApiTestCase;
@@ -12,7 +17,8 @@ final class SignUpTest extends ApiTestCase
 {
     use FakerTrait;
 
-    public function testShouldSignUpSuccessfully(): void
+    #[Test]
+    public function shouldSignUpSuccessfully(): void
     {
         self::createClient();
 
@@ -24,14 +30,20 @@ final class SignUpTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
         self::assertMatchesOpenApiResponse();
         self::assertResponseHeaderSame('location', '/welcome');
+
+        /** @var UserRepository $userRepository */
+        $userRepository = self::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findByEmail(Email::create('user@email.com'));
+
+        self::assertEventDispatched(new UserRegistered($user->id()));
     }
 
     /**
-     * @dataProvider provideInvalidData
-     *
      * @param array<array{message: string, propertyPath: string}> $expectedResponse
      */
-    public function testShouldReturnUnprocessableEntity(
+    #[Test]
+    #[DataProvider('provideInvalidData')]
+    public function shouldReturnUnprocessableEntity(
         string $email,
         string $password,
         array $expectedResponse
@@ -58,7 +70,7 @@ final class SignUpTest extends ApiTestCase
             'password' => self::faker()->password(20),
             'expectedResponse' => [
                 [
-                    'message' => 'Cette valeur n\'est pas une adresse email valide.',
+                    'message' => "Cette valeur n'est pas une adresse email valide.",
                     'propertyPath' => 'email',
                 ],
             ],
@@ -98,7 +110,8 @@ final class SignUpTest extends ApiTestCase
         ];
     }
 
-    public function testShouldReturnBadRequest(): void
+    #[Test]
+    public function shouldReturnBadRequest(): void
     {
         self::createClient();
 

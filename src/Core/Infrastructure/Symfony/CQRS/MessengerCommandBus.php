@@ -15,11 +15,12 @@ final class MessengerCommandBus implements CommandBus
         handle as handleQuery;
     }
 
-    public function __construct(MessageBusInterface $commandBus)
+    public function __construct(MessageBusInterface $messageBus)
     {
-        $this->messageBus = $commandBus;
+        $this->messageBus = $messageBus;
     }
 
+    #[\Override]
     public function execute(Command $command): mixed
     {
         return $this->handleQuery($command);

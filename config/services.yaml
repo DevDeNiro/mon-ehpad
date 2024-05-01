@@ -13,11 +13,11 @@ services:
             - '../src/Core/Domain/Model/ValueObject/'
             - '../src/Core/Domain/Model/Notification/'
             - '../src/Core/Domain/Model/Entity/'
-            - '../src/Core/Infrastructure/Doctrine/Entity/'
             - '../src/Core/Infrastructure/Symfony/Kernel.php'
             - '../src/Security/Domain/Model/Entity/'
             - '../src/Security/Domain/Model/ValueObject/'
             - '../src/Security/Domain/Model/Notification/'
+            - '../src/Security/Infrastructure/Doctrine/Entity/'
 
     app.security.user_provider:
         class: App\Security\Infrastructure\Symfony\Security\UserProvider

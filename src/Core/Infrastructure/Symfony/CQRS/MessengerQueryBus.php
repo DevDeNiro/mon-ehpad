@@ -15,11 +15,12 @@ final class MessengerQueryBus implements QueryBus
         handle as handleQuery;
     }
 
-    public function __construct(MessageBusInterface $queryBus)
+    public function __construct(MessageBusInterface $messageBus)
     {
-        $this->messageBus = $queryBus;
+        $this->messageBus = $messageBus;
     }
 
+    #[\Override]
     public function fetch(Query $query): mixed
     {
         return $this->handleQuery($query);

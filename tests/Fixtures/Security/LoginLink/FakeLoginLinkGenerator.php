@@ -10,6 +10,7 @@ use App\Security\Domain\Port\LoginLink\LoginLinkGeneratorInterface;
 
 final class FakeLoginLinkGenerator implements LoginLinkGeneratorInterface
 {
+    #[\Override]
     public function generate(User $user): Url
     {
         return Url::create(sprintf('http://localhost/login_check?user=%s', $user->email()->value()));

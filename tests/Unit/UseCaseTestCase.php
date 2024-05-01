@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Core\Domain\CQRS\Command;
+use App\Core\Domain\CQRS\Event;
 use App\Core\Domain\CQRS\Handler;
 use App\Core\Domain\CQRS\Query;
 use Cake\Chronos\Chronos;
@@ -14,61 +15,58 @@ use Symfony\Component\Validator\ContainerConstraintValidatorFactory;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Tests\EntityFactoryTrait;
-use Tests\Fixtures\Core\Notifier\FakeNotifier;
-use Tests\Fixtures\Core\Symfony\DependencyInjection\ValidatorContainer;
+use Tests\Fixtures\Core\Infrastructure\Notifier\FakeNotifier;
+use Tests\Fixtures\Core\Infrastructure\Symfony\CQRS\FakeEventBus;
+use Tests\Fixtures\Core\Infrastructure\Symfony\DependencyInjection\ValidatorContainer;
 
 abstract class UseCaseTestCase extends TestCase
 {
     use UseCaseAssertionsTrait;
-    use EntityFactoryTrait;
 
     protected ?Handler $useCase = null;
 
     private static ?ValidatorInterface $validator = null;
 
-    private static ?FakeNotifier $notifier = null;
+    private static ?FakeEventBus $fakeEventBus = null;
+
+    private static ?FakeNotifier $fakeNotifier = null;
+
+    public static function eventBus(): FakeEventBus
+    {
+        if (! self::$fakeEventBus instanceof FakeEventBus) {
+            self::$fakeEventBus = new FakeEventBus();
+        }
+
+        return self::$fakeEventBus;
+    }
 
     /**
      * @param array<string, ConstraintValidatorInterface> $validators
      */
     protected function setValidator(array $validators): self
     {
-        $constraintValidatorFactory = new ContainerConstraintValidatorFactory(new ValidatorContainer($validators));
+        $containerConstraintValidatorFactory = new ContainerConstraintValidatorFactory(new ValidatorContainer($validators));
 
         self::$validator = Validation::createValidatorBuilder()
-            ->setConstraintValidatorFactory($constraintValidatorFactory)
+            ->setConstraintValidatorFactory($containerConstraintValidatorFactory)
             ->enableAttributeMapping()
             ->getValidator();
 
         return $this;
     }
 
-    private function validate(Query|Command $input): void
-    {
-        if (null === self::$validator) {
-            throw new \RuntimeException('Setup validator before use it.');
-        }
-
-        $violations = self::$validator->validate($input);
-
-        if (0 !== count($violations)) {
-            throw new ValidationFailedException($input, $violations);
-        }
-    }
-
     protected static function notifier(): FakeNotifier
     {
-        if (null === self::$notifier) {
-            self::$notifier = new FakeNotifier();
+        if (! self::$fakeNotifier instanceof FakeNotifier) {
+            self::$fakeNotifier = new FakeNotifier();
         }
 
-        return self::$notifier;
+        return self::$fakeNotifier;
     }
 
-    protected function setUseCase(Handler $useCase): void
+    protected function setUseCase(Handler $handler): void
     {
-        $this->useCase = $useCase;
+        $this->useCase = $handler;
     }
 
     protected static function setTestNow(Chronos $now): void
@@ -76,42 +74,53 @@ abstract class UseCaseTestCase extends TestCase
         Chronos::setTestNow($now);
     }
 
-    protected function handle(Command|Query $input): mixed
+    protected function handle(Command|Query|Event $input): mixed
     {
-        if (null === $this->useCase) {
+        if (! $this->useCase instanceof Handler) {
             throw new \RuntimeException('Setup use case before execute it.');
         }
 
-        if (!method_exists($this->useCase, '__invoke')) {
+        if (! method_exists($this->useCase, '__invoke')) {
             throw new \RuntimeException('Use case must have __invoke method.');
         }
 
-        $method = new \ReflectionMethod($this->useCase, '__invoke');
+        $reflectionMethod = new \ReflectionMethod($this->useCase, '__invoke');
 
-        if (null === $method->getReturnType() || !$method->getReturnType() instanceof \ReflectionNamedType) {
+        if ($reflectionMethod->getReturnType() === null || ! $reflectionMethod->getReturnType() instanceof \ReflectionNamedType) {
             throw new \RuntimeException('Use case must have a return type.');
         }
 
         try {
             $this->validate($input);
-        } catch (ValidationFailedException $e) {
-            if (null != $this->getExpectedException() && ValidationFailedException::class === $this->getExpectedException()) {
-                self::assertCount(count($this->expectedViolations), $e->getViolations());
-                foreach ($this->expectedViolations as $key => $expectedViolation) {
-                    self::assertSame($expectedViolation['propertyPath'], $e->getViolations()->get($key)->getPropertyPath());
-                    self::assertSame($expectedViolation['message'], $e->getViolations()->get($key)->getMessage());
-                }
+        } catch (ValidationFailedException $validationFailedException) {
+            self::assertCount(count($this->expectedViolations), $validationFailedException->getViolations());
+            foreach ($this->expectedViolations as $key => $expectedViolation) {
+                self::assertSame($expectedViolation['propertyPath'], $validationFailedException->getViolations()->get($key)->getPropertyPath());
+                self::assertSame($expectedViolation['message'], $validationFailedException->getViolations()->get($key)->getMessage());
             }
 
-            throw $e;
+            throw $validationFailedException;
         }
 
-        if ('void' === $method->getReturnType()->getName()) {
-            $method->invoke($this->useCase, $input);
+        if ($reflectionMethod->getReturnType()->getName() === 'void') {
+            $reflectionMethod->invoke($this->useCase, $input);
 
             return null;
         }
 
-        return $method->invoke($this->useCase, $input);
+        return $reflectionMethod->invoke($this->useCase, $input);
+    }
+
+    private function validate(Query|Command|Event $input): void
+    {
+        if (! self::$validator instanceof ValidatorInterface) {
+            throw new \RuntimeException('Setup validator before use it.');
+        }
+
+        $constraintViolationList = self::$validator->validate($input);
+
+        if (count($constraintViolationList) !== 0) {
+            throw new ValidationFailedException($input, $constraintViolationList);
+        }
     }
 }

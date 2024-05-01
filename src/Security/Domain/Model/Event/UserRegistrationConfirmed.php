@@ -7,10 +7,11 @@ namespace App\Security\Domain\Model\Event;
 use App\Core\Domain\CQRS\Event;
 use App\Core\Domain\Model\ValueObject\Identifier;
 
-final class UserRegistrationConfirmed implements Event
+final readonly class UserRegistrationConfirmed implements Event
 {
-    private function __construct(private Identifier $id)
-    {
+    private function __construct(
+        private Identifier $identifier
+    ) {
     }
 
     public static function create(Identifier $identifier): self
@@ -20,6 +21,6 @@ final class UserRegistrationConfirmed implements Event
 
     public function id(): Identifier
     {
-        return $this->id;
+        return $this->identifier;
     }
 }

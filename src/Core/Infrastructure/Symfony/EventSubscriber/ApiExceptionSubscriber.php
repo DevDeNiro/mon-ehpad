@@ -21,27 +21,31 @@ use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 final readonly class ApiExceptionSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private SerializerInterface $serializer)
-    {
+    public function __construct(
+        private SerializerInterface $serializer
+    ) {
     }
 
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
-        return [KernelEvents::EXCEPTION => 'onKernelException'];
+        return [
+            KernelEvents::EXCEPTION => 'onKernelException',
+        ];
     }
 
-    public function onKernelException(ExceptionEvent $event): void
+    public function onKernelException(ExceptionEvent $exceptionEvent): void
     {
-        $exception = $event->getThrowable();
+        $throwable = $exceptionEvent->getThrowable();
 
-        $event->setResponse(
+        $exceptionEvent->setResponse(
             new JsonResponse(
                 $this->serializer->serialize(
-                    match ($exception::class) {
-                        ValidationFailedException::class, MessengerValidationFailedException::class => (static function (ConstraintViolationListInterface $violations): array {
+                    match ($throwable::class) {
+                        ValidationFailedException::class, MessengerValidationFailedException::class => (static function (ConstraintViolationListInterface $constraintViolationList): array {
                             $result = [];
 
-                            foreach ($violations as $violation) {
+                            foreach ($constraintViolationList as $violation) {
                                 $result[] = [
                                     'propertyPath' => $violation->getPropertyPath(),
                                     'message' => $violation->getMessage(),
@@ -49,12 +53,14 @@ final readonly class ApiExceptionSubscriber implements EventSubscriberInterface
                             }
 
                             return $result;
-                        })($exception->getViolations()),
-                        default => ['message' => $exception->getMessage()],
+                        })($throwable->getViolations()),
+                        default => [
+                            'message' => $throwable->getMessage(),
+                        ],
                     },
                     'json'
                 ),
-                match ($exception::class) {
+                match ($throwable::class) {
                     BadRequestHttpException::class => Response::HTTP_BAD_REQUEST,
                     UnauthorizedHttpException::class => Response::HTTP_UNAUTHORIZED,
                     AccessDeniedHttpException::class => Response::HTTP_FORBIDDEN,

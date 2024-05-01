@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Core\Domain\CQRS\Event;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
+use Tests\EventBusAssertionsTrait;
 
 trait UseCaseAssertionsTrait
 {
+    use EventBusAssertionsTrait;
+
     /**
      * @var array<array{propertyPath: string, message: string}>
      */
@@ -26,13 +28,5 @@ trait UseCaseAssertionsTrait
     public static function assertEmailSent(): void
     {
         self::assertCount(1, static::notifier()->sentEmails());
-    }
-
-    public static function assertEventDispatched(Event $event): void
-    {
-        $serializedEvent = serialize($event);
-        $events = static::eventBus()->events();
-        self::assertGreaterThanOrEqual(1, count($events));
-        self::assertContains($serializedEvent, array_map('serialize', $events));
     }
 }

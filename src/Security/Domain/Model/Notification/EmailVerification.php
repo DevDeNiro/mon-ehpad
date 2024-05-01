@@ -11,24 +11,28 @@ use App\Core\Domain\Model\ValueObject\Url;
 
 final readonly class EmailVerification implements Email
 {
-    private function __construct(private EmailValueObject $email, private Url $loginLink)
-    {
+    private function __construct(
+        private EmailValueObject $emailValueObject,
+        private Url $url
+    ) {
     }
 
-    public static function create(EmailValueObject $email, Url $loginLink): self
+    public static function create(EmailValueObject $emailValueObject, Url $url): self
     {
-        return new self($email, $loginLink);
+        return new self($emailValueObject, $url);
     }
 
+    #[\Override]
     public function recipient(): Recipient
     {
-        return Recipient::create($this->email);
+        return Recipient::create($this->emailValueObject);
     }
 
+    #[\Override]
     public function context(): array
     {
         return [
-            'login_link' => $this->loginLink->value(),
+            'login_link' => $this->url->value(),
         ];
     }
 }

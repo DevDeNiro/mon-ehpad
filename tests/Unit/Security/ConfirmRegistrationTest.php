@@ -5,66 +5,69 @@ declare(strict_types=1);
 namespace Tests\Unit\Security;
 
 use App\Core\Domain\Model\ValueObject\Email;
-use App\Security\Domain\Model\Factory\RegisterUserFactory;
+use App\Core\Domain\Model\ValueObject\Identifier;
+use App\Security\Domain\Model\Entity\Status;
+use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\ValueObject\Password;
 use App\Security\Domain\UseCase\ConfirmRegistration\ConfirmRegistration;
 use App\Security\Domain\UseCase\ConfirmRegistration\VerifiedUser;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Validator\Constraints\ExpressionValidator;
-use Tests\Fixtures\Core\Doctrine\Repository\FakeUserRepository;
+use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
 use Tests\Unit\UseCaseTestCase;
 
 final class ConfirmRegistrationTest extends UseCaseTestCase
 {
-    private FakeUserRepository $userRepository;
+    private FakeUserRepository $fakeUserRepository;
 
-    private RegisterUserFactory $factory;
-
+    #[\Override]
     protected function setUp(): void
     {
-        $this->userRepository = new FakeUserRepository();
+        $this->fakeUserRepository = new FakeUserRepository();
         $this->setValidator([
             'validator.expression' => new ExpressionValidator(new ExpressionLanguage()),
         ]);
-        $this->setUseCase(new ConfirmRegistration($this->userRepository));
-        $this->factory = self::entityFactory(RegisterUserFactory::class);
+        $this->setUseCase(new ConfirmRegistration($this->fakeUserRepository));
     }
 
-    public function testShouldConfirmRegistration(): void
+    #[Test]
+    public function shouldConfirmRegistration(): void
     {
-        $user = $this->factory
-            ->withEmail(Email::create('user@email.com'))
-            ->withPassword(Password::create('hashed_password'))
-            ->build();
+        $user = new User(
+            Identifier::generate(),
+            Email::create('user@email.com'),
+            Password::create('hashed_password'),
+            Status::WaitingForConfirmation
+        );
 
-        $this->userRepository->register($user);
+        $this->fakeUserRepository->insert($user);
 
-        $verifiedUser = new VerifiedUser($user);
+        $verifiedUser = new VerifiedUser($user->email());
 
         $this->handle($verifiedUser);
 
         self::assertTrue($user->isActive());
     }
 
-    public function testShouldRaiseAndExceptionDueToUserAlreadyActive(): void
+    #[Test]
+    public function shouldRaiseAndExceptionDueToUserAlreadyActive(): void
     {
-        $user = $this->factory
-            ->withEmail(Email::create('user@email.com'))
-            ->withPassword(Password::create('hashed_password'))
-            ->build();
+        $user = new User(
+            Identifier::generate(),
+            Email::create('user@email.com'),
+            Password::create('hashed_password'),
+            Status::WaitingForConfirmation
+        );
 
-        $this->userRepository->register($user);
+        $this->fakeUserRepository->insert($user);
         $user->confirm();
-        $this->userRepository->confirm($user);
+        $this->fakeUserRepository->save($user);
 
-        $verifiedUser = new VerifiedUser($user);
+        $verifiedUser = new VerifiedUser($user->email());
 
-        $this->expectedViolations([
-            [
-                'propertyPath' => '',
-                'message' => 'User is already verified.',
-            ],
-        ]);
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage(sprintf('User (id: %s) is already active.', $user->id()));
 
         $this->handle($verifiedUser);
     }

@@ -5,44 +5,43 @@ declare(strict_types=1);
 namespace Tests\Unit\Security;
 
 use App\Core\Domain\Model\ValueObject\Email;
-use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Event\UserRegistered;
-use App\Security\Domain\Model\Factory\RegisterUserFactory;
 use App\Security\Domain\UseCase\SignUp\NewUser;
 use App\Security\Domain\UseCase\SignUp\SignUp;
 use App\Security\Domain\Validation\Validator\UniqueEmailValidator;
 use Cake\Chronos\Chronos;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\FakerTrait;
-use Tests\Fixtures\Core\Doctrine\Repository\FakeUserRepository;
-use Tests\Fixtures\Security\Hasher\FakePasswordHash;
+use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
+use Tests\Fixtures\Security\Hasher\FakePasswordHasher;
 use Tests\Unit\UseCaseTestCase;
 
 final class SignUpTest extends UseCaseTestCase
 {
     use FakerTrait;
 
-    private FakeUserRepository $userRepository;
+    private FakeUserRepository $fakeUserRepository;
 
+    #[\Override]
     protected function setUp(): void
     {
-        $this->userRepository = new FakeUserRepository();
+        $this->fakeUserRepository = new FakeUserRepository();
         $this->setValidator([
-            UniqueEmailValidator::class => new UniqueEmailValidator($this->userRepository),
+            UniqueEmailValidator::class => new UniqueEmailValidator($this->fakeUserRepository),
         ]);
-
-        /** @var RegisterUserFactory $factory */
-        $factory = self::entityFactory(RegisterUserFactory::class);
 
         $this->setUseCase(
             new SignUp(
-                $this->userRepository,
-                new FakePasswordHash(),
-                $factory
+                $this->fakeUserRepository,
+                new FakePasswordHasher(),
+                self::eventBus(),
             )
         );
     }
 
-    public function testShouldSignUp(): void
+    #[Test]
+    public function shouldSignUp(): void
     {
         static::setTestNow(new Chronos('2024-01-01 00:00:00'));
 
@@ -52,19 +51,18 @@ final class SignUpTest extends UseCaseTestCase
 
         $this->handle($newUser);
 
-        $user = $this->userRepository->findByEmail(Email::create($newUser->email));
+        $user = $this->fakeUserRepository->findByEmail(Email::create($newUser->email));
 
-        self::assertInstanceOf(User::class, $user);
         self::assertSame('hashed_password', $user->password()->value());
-        self::assertEventDispatched(UserRegistered::create($user->id()));
+        self::assertEventDispatched(new UserRegistered($user->id()));
     }
 
     /**
-     * @dataProvider provideInvalidData
-     *
      * @param array<array{propertyPath: string, message: string}> $expectedViolations
      */
-    public function testShouldRaiseValidationFailedException(array $expectedViolations, NewUser $newUser): void
+    #[Test]
+    #[DataProvider('provideInvalidData')]
+    public function shouldRaiseValidationFailedException(array $expectedViolations, NewUser $newUser): void
     {
         $this->expectedViolations($expectedViolations);
         $this->handle($newUser);

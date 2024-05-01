@@ -8,7 +8,8 @@ use App\Core\Domain\CQRS\EventBus;
 
 abstract class Factory
 {
-    public function __construct(protected EventBus $eventBus)
-    {
+    public function __construct(
+        protected EventBus $eventBus
+    ) {
     }
 }

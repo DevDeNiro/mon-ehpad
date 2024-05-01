@@ -8,8 +8,15 @@ use App\Core\Domain\Validation\Assert;
 
 final readonly class Url implements Str
 {
-    public function __construct(private string $value)
+    public function __construct(
+        private string $value
+    ) {
+    }
+
+    #[\Override]
+    public function __toString(): string
     {
+        return $this->value;
     }
 
     public static function create(string $value): self
@@ -21,11 +28,6 @@ final readonly class Url implements Str
     }
 
     public function value(): string
-    {
-        return $this->value;
-    }
-
-    public function __toString(): string
     {
         return $this->value;
     }

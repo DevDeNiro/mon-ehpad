@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Castor\Attribute\AsTask;
-
 use function Castor\io;
 use function Castor\run;
 

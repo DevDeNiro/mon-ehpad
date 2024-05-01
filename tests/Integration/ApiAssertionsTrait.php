@@ -11,12 +11,14 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
-use function Symfony\Component\String\u;
+use Tests\EventBusAssertionsTrait;
 use function Safe\json_encode;
+use function Symfony\Component\String\u;
 
 trait ApiAssertionsTrait
 {
+    use EventBusAssertionsTrait;
+
     public static function assertJsonResponse(mixed $data): void
     {
         if (($client = self::getClient()) === null) {

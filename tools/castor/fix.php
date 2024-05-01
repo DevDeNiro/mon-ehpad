@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Castor\Attribute\AsTask;
-
 use function Castor\io;
 use function Castor\run;
 
@@ -11,12 +10,24 @@ use function Castor\run;
 function fix(): void
 {
     io()->title('Run all fixers');
-    fixPhpCsFixer();
+    fixRector();
+    fixEcs();
 }
 
-#[AsTask(name: 'php-cs-fixer', namespace: 'fix', description: 'Run PHP CS Fixer')]
-function fixPhpCsFixer(): void
+#[AsTask(name: 'ecs', namespace: 'fix', description: 'Run Easy Coding Standard')]
+function fixEcs(): void
 {
-    io()->title('Run PHP CS Fixer');
-    run('php bin/php-cs-fixer fix --config=tools/php-cs-fixer.php', ['XDEBUG_MODE' => 'off']);
+    io()->title('Run Easy Coding Standard');
+    run('php bin/ecs --fix --config=tools/ecs.php', [
+        'XDEBUG_MODE' => 'off',
+    ]);
+}
+
+#[AsTask(name: 'rector', namespace: 'fix', description: 'Run Rector')]
+function fixRector(): void
+{
+    io()->title('Run Rector');
+    run('php bin/rector process --config tools/rector.php', [
+        'XDEBUG_MODE' => 'off',
+    ]);
 }

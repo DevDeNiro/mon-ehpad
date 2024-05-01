@@ -13,26 +13,30 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final readonly class ApiResponseSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private SerializerInterface $serializer)
-    {
+    public function __construct(
+        private SerializerInterface $serializer
+    ) {
     }
 
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
-        return [KernelEvents::VIEW => 'onKernelView'];
+        return [
+            KernelEvents::VIEW => 'onKernelView',
+        ];
     }
 
-    public function onKernelView(ViewEvent $event): void
+    public function onKernelView(ViewEvent $viewEvent): void
     {
-        $result = $event->getControllerResult();
+        $result = $viewEvent->getControllerResult();
 
-        if (null === $result) {
-            $event->setResponse(new JsonResponse(status: Response::HTTP_NO_CONTENT));
+        if ($result === null) {
+            $viewEvent->setResponse(new JsonResponse(status: Response::HTTP_NO_CONTENT));
 
             return;
         }
 
-        $event->setResponse(
+        $viewEvent->setResponse(
             new JsonResponse(
                 $this->serializer->serialize($result, 'json'),
                 Response::HTTP_OK,

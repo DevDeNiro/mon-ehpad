@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 use Castor\Attribute\AsOption;
 use Castor\Attribute\AsTask;
-
 use function Castor\import;
 use function Castor\io;
 
-import(__DIR__.'/castor/analysis.php');
-import(__DIR__.'/castor/composer.php');
-import(__DIR__.'/castor/database.php');
-import(__DIR__.'/castor/docker.php');
-import(__DIR__.'/castor/fix.php');
-import(__DIR__.'/castor/git.php');
-import(__DIR__.'/castor/symfony.php');
-import(__DIR__.'/castor/tests.php');
+import(__DIR__ . '/castor/analysis.php');
+import(__DIR__ . '/castor/composer.php');
+import(__DIR__ . '/castor/database.php');
+import(__DIR__ . '/castor/docker.php');
+import(__DIR__ . '/castor/fix.php');
+import(__DIR__ . '/castor/git.php');
+import(__DIR__ . '/castor/symfony.php');
+import(__DIR__ . '/castor/tests.php');
 
 #[AsTask(aliases: ['build'], name: 'build', namespace: 'tools', description: 'Build the project')]
 function build(#[AsOption] ?string $env = null): void
@@ -23,7 +22,7 @@ function build(#[AsOption] ?string $env = null): void
     io()->title('Build the project');
     dockerBuild();
     depsInstall();
-    if (null === $env) {
+    if ($env === null) {
         prepare();
         prepare('test');
     } else {
@@ -72,5 +71,6 @@ function quality(): void
 {
     io()->title('Run quality analysis');
     tests();
+    fix();
     analysis();
 }

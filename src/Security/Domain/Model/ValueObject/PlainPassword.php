@@ -10,8 +10,15 @@ use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 final readonly class PlainPassword implements Str
 {
-    private function __construct(private string $value)
+    private function __construct(
+        private string $value
+    ) {
+    }
+
+    #[\Override]
+    public function __toString(): string
     {
+        return $this->value;
     }
 
     public static function create(string $plainPassword): self
@@ -23,11 +30,6 @@ final readonly class PlainPassword implements Str
     }
 
     public function value(): string
-    {
-        return $this->value;
-    }
-
-    public function __toString(): string
     {
         return $this->value;
     }

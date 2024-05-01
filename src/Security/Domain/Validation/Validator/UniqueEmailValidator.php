@@ -11,21 +11,23 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 final class UniqueEmailValidator extends ConstraintValidator
 {
-    public function __construct(private readonly UserRepository $userRepository)
-    {
+    public function __construct(
+        private readonly UserRepository $userRepository
+    ) {
     }
 
+    #[\Override]
     public function validate(mixed $value, Constraint $constraint): void
     {
-        if (!$constraint instanceof UniqueEmail) {
+        if (! $constraint instanceof UniqueEmail) {
             return;
         }
 
-        if (!$value instanceof Email && !is_string($value)) {
+        if (! $value instanceof Email && ! is_string($value)) {
             return;
         }
 
-        if (!$this->userRepository->isAlreadyUsed((string) $value)) {
+        if (! $this->userRepository->isAlreadyUsed((string) $value)) {
             return;
         }
 

@@ -4,7 +4,7 @@
         "cz-emoji": {
             "symbol": true,
             "questions": {
-                "scope": "Issue ID: #{issueId}"
+                "scope": "Linear ID: tbo-{issueId}"
             },
             "skipQuestions": ["issues"],
             "types": [
@@ -12,19 +12,13 @@
                   "emoji": "✨",
                   "code": ":sparkles:",
                   "description": "Introduce new features.",
-                  "name": "feat"
-                },
-                {
-                  "emoji": "🧑‍",
-                  "code": ":technologist:",
-                  "description": "Improve developer experience.",
-                  "name": "dx"
+                  "name": "feature"
                 },
                 {
                   "emoji": "🐛",
                   "code": ":bug:",
                   "description": "Fixing a bug.",
-                  "name": "fix"
+                  "name": "bug"
                 },
                 {
                   "emoji": "✏️️",
@@ -39,31 +33,13 @@
                   "name": "build"
                 },
                 {
-                  "emoji": "👷",
-                  "code": ":construction_worker:",
-                  "description": "Add or update CI build system.",
-                  "name": "ci"
-                },
-                {
                   "emoji": "📝",
                   "code": ":memo:",
                   "description": "Add or update documentation.",
                   "name": "docs"
                 },
                 {
-                  "emoji": "✅",
-                  "code": ":white_check_mark:",
-                  "description": "Add, update, or pass tests.",
-                  "name": "test"
-                },
-                {
-                  "emoji": "⚡️",
-                  "code": ":zap:",
-                  "description": "Improve performance.",
-                  "name": "perf"
-                },
-                {
-                  "emoji": "⚙️",
+                  "emoji": "🛠️",
                   "code": ":cog:",
                   "description": "Refactor or improve code.",
                   "name": "chore"

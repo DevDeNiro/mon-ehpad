@@ -10,19 +10,19 @@ use App\Core\Domain\Model\ValueObject\FullName;
 final readonly class Recipient
 {
     private function __construct(
-        private Email $emailAddress,
+        private Email $email,
         private ?FullName $fullName = null
     ) {
     }
 
-    public static function create(Email $emailAddress, ?FullName $fullName = null): self
+    public static function create(Email $email, ?FullName $fullName = null): self
     {
-        return new self($emailAddress, $fullName);
+        return new self($email, $fullName);
     }
 
-    public function emailAddress(): Email
+    public function email(): Email
     {
-        return $this->emailAddress;
+        return $this->email;
     }
 
     public function fullName(): ?FullName

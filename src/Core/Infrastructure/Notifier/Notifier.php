@@ -12,17 +12,19 @@ use Symfony\Component\Mime\Email as SymfonyEmail;
 
 final readonly class Notifier implements NotifierInterface
 {
-    public function __construct(private MailerInterface $mailer)
-    {
+    public function __construct(
+        private MailerInterface $mailer
+    ) {
     }
 
+    #[\Override]
     public function sendEmail(Email $email): void
     {
         $this->mailer->send(
             (new SymfonyEmail())
                 ->to(
                     new Address(
-                        $email->recipient()->emailAddress()->value(),
+                        $email->recipient()->email()->value(),
                         $email->recipient()->fullName()?->value() ?? ''
                     )
                 )

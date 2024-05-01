@@ -4,42 +4,23 @@ declare(strict_types=1);
 
 namespace App\Security\Domain\Model\Entity;
 
-use App\Core\Domain\Model\Entity\EventsInterface;
-use App\Core\Domain\Model\Entity\EventTrait;
 use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Domain\Model\ValueObject\Identifier;
-use App\Security\Domain\Model\Event\UserRegistered;
-use App\Security\Domain\Model\Event\UserRegistrationConfirmed;
 use App\Security\Domain\Model\ValueObject\Password;
 
-final class User implements EventsInterface
+final class User
 {
-    use EventTrait;
-
-    private function __construct(
-        private readonly Identifier $id,
+    public function __construct(
+        private readonly Identifier $identifier,
         private readonly Email $email,
         private readonly Password $password,
-        private Status $status = Status::WaitingForConfirmation
+        private Status $status
     ) {
-    }
-
-    public static function create(Identifier $id, Email $email, Password $password, Status $status): self
-    {
-        return new self($id, $email, $password, $status);
-    }
-
-    public static function register(Email $email, Password $password): self
-    {
-        $user = new self(Identifier::generate(), $email, $password);
-        $user->dispatch(UserRegistered::create($user->id));
-
-        return $user;
     }
 
     public function id(): Identifier
     {
-        return $this->id;
+        return $this->identifier;
     }
 
     public function email(): Email
@@ -54,22 +35,21 @@ final class User implements EventsInterface
 
     public function isActive(): bool
     {
-        return Status::Active === $this->status;
+        return $this->status === Status::Active;
     }
 
     public function isWaitingForConfirmation(): bool
     {
-        return Status::WaitingForConfirmation === $this->status;
+        return $this->status === Status::WaitingForConfirmation;
     }
 
     public function confirm(): void
     {
-        if (Status::Active === $this->status) {
-            throw new \DomainException('User is already active');
+        if ($this->status === Status::Active) {
+            throw new \DomainException(sprintf('User (id: %s) is already active.', $this->identifier));
         }
 
         $this->status = Status::Active;
-        $this->dispatch(UserRegistrationConfirmed::create($this->id));
     }
 
     public function status(): Status

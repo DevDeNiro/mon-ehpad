@@ -11,7 +11,7 @@ final class Assert extends \Webmozart\Assert\Assert
 {
     public static function url(string $value, ?string $message = null): void
     {
-        if (false === filter_var($value, FILTER_VALIDATE_URL)) {
+        if (filter_var($value, FILTER_VALIDATE_URL) === false) {
             throw new InvalidArgumentException($message ?? sprintf('Expected a valid URL. Got: %s', $value));
         }
     }
@@ -20,21 +20,26 @@ final class Assert extends \Webmozart\Assert\Assert
     {
         $length = \strlen($value);
 
-        if (0 === $length) {
+        if ($length === 0) {
             return;
         }
+
         /** @var array<int> $password */
         $password = count_chars($value, 1);
         $chars = \count($password);
-
-        $control = $digit = $upper = $lower = $symbol = $other = 0;
+        $control = 0;
+        $digit = 0;
+        $upper = 0;
+        $lower = 0;
+        $symbol = 0;
+        $other = 0;
         foreach (array_keys($password) as $chr) {
             match (true) {
-                $chr < 32 || 127 === $chr => $control = 33,
-                48 <= $chr && $chr <= 57 => $digit = 10,
-                65 <= $chr && $chr <= 90 => $upper = 26,
-                97 <= $chr && $chr <= 122 => $lower = 26,
-                128 <= $chr => $other = 128,
+                $chr < 32 || $chr === 127 => $control = 33,
+                $chr >= 48 && $chr <= 57 => $digit = 10,
+                $chr >= 65 && $chr <= 90 => $upper = 26,
+                $chr >= 97 && $chr <= 122 => $lower = 26,
+                $chr >= 128 => $other = 128,
                 default => $symbol = 33,
             };
         }
@@ -51,7 +56,7 @@ final class Assert extends \Webmozart\Assert\Assert
         };
 
         if ($passwordStrength < $strength) {
-            throw new InvalidArgumentException($message ?? sprintf('The password strength is too low. Please use a stronger password.'));
+            throw new InvalidArgumentException($message ?? 'The password strength is too low. Please use a stronger password.');
         }
     }
 }

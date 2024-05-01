@@ -20,8 +20,8 @@ trait EventTrait
     {
         $this->eventBus = $eventBus;
 
-        foreach ($this->eventsQueue as $event) {
-            $this->dispatch($event);
+        foreach ($this->eventsQueue as $eventQueue) {
+            $this->dispatch($eventQueue);
         }
 
         $this->eventsQueue = [];
@@ -29,7 +29,7 @@ trait EventTrait
 
     public function dispatch(Event $event): void
     {
-        if (null !== $this->eventBus) {
+        if ($this->eventBus !== null) {
             $this->eventBus->dispatch($event);
 
             return;

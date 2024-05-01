@@ -1,26 +1,13 @@
-parameters:
-
 services:
     _defaults:
         autowire: true
         autoconfigure: true
+
     _instanceof:
         App\Core\Domain\CQRS\Handler:
             tags: ['messenger.message_handler']
-    App\:
-        resource: '../src/'
-        exclude:
-            - '../src/Core/Domain/Model/ValueObject/'
-            - '../src/Core/Domain/Model/Notification/'
-            - '../src/Core/Domain/Model/Entity/'
-            - '../src/Core/Infrastructure/Doctrine/Entity/'
-            - '../src/Core/Infrastructure/Symfony/Kernel.php'
-            - '../src/Security/Domain/Model/Entity/'
-            - '../src/Security/Domain/Model/ValueObject/'
-            - '../src/Security/Domain/Model/Notification/'
-            - '../src/Core/Infrastructure/Notifier/'
-            - '../src/Security/Infrastructure/Hasher/'
-            - '../src/Security/Infrastructure/LoginLink/'
 
     Tests\Fixtures\:
         resource: '../tests/Fixtures/'
+
+    App\Core\Domain\CQRS\EventBus: '@Tests\Fixtures\Core\Infrastructure\Symfony\CQRS\FakeEventBus'
