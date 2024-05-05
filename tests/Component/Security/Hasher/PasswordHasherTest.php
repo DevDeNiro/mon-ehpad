@@ -9,7 +9,7 @@ use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Enum\Status;
 use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\PlainPassword;
-use App\Security\Infrastructure\Hasher\DefaultPasswordHasher;
+use App\Security\Infrastructure\Application\Hasher\DefaultPasswordHasher;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

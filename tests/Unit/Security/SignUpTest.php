@@ -13,8 +13,8 @@ use Cake\Chronos\Chronos;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\FakerTrait;
+use Tests\Fixtures\Security\Application\Hasher\FakePasswordHasher;
 use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
-use Tests\Fixtures\Security\Hasher\FakePasswordHasher;
 use Tests\Unit\UseCaseTestCase;
 
 final class SignUpTest extends UseCaseTestCase

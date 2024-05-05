@@ -21,26 +21,31 @@ use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Validator\Constraints\ExpressionValidator;
 use Tests\Fixtures\Core\Infrastructure\Doctrine\FakePendingOneTimePasswordRepository;
+use Tests\Fixtures\Security\Application\Security\FakeLoginProgrammatically;
 use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
 use Tests\Unit\UseCaseTestCase;
 
 final class ConfirmRegistrationTest extends UseCaseTestCase
 {
-    private FakeUserRepository $fakeUserRepository;
+    private FakeUserRepository $userRepository;
 
-    private FakePendingOneTimePasswordRepository $fakePendingOneTimePasswordRepository;
+    private FakePendingOneTimePasswordRepository $pendingOneTimePasswordRepository;
+
+    private FakeLoginProgrammatically $loginProgrammatically;
 
     protected function setUp(): void
     {
-        $this->fakeUserRepository = new FakeUserRepository();
-        $this->fakePendingOneTimePasswordRepository = new FakePendingOneTimePasswordRepository();
+        $this->userRepository = new FakeUserRepository();
+        $this->pendingOneTimePasswordRepository = new FakePendingOneTimePasswordRepository();
+        $this->loginProgrammatically = new FakeLoginProgrammatically();
         $this->setValidator([
             'validator.expression' => new ExpressionValidator(new ExpressionLanguage()),
         ]);
         $this->setUseCase(
             new Handler(
-                $this->fakeUserRepository,
-                $this->fakePendingOneTimePasswordRepository
+                $this->userRepository,
+                $this->pendingOneTimePasswordRepository,
+                $this->loginProgrammatically
             )
         );
     }
@@ -55,7 +60,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             Status::WaitingForConfirmation
         );
 
-        $this->fakeUserRepository->insert($user);
+        $this->userRepository->insert($user);
 
         $pendingOneTimePassword = new PendingOneTimePassword(
             new Id(),
@@ -64,7 +69,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             Target::create($user::class, $user->getId())
         );
 
-        $this->fakePendingOneTimePasswordRepository->insert($pendingOneTimePassword);
+        $this->pendingOneTimePasswordRepository->insert($pendingOneTimePassword);
 
         $input = new Input();
         $input->oneTimePassword = '000000';
@@ -73,6 +78,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
         $this->handle($input);
 
         self::assertTrue($user->isActive());
+        self::assertTrue($this->loginProgrammatically->logged);
     }
 
     #[Test]
@@ -85,7 +91,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             Status::Active
         );
 
-        $this->fakeUserRepository->insert($user);
+        $this->userRepository->insert($user);
 
         $pendingOneTimePassword = new PendingOneTimePassword(
             new Id(),
@@ -94,7 +100,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             Target::create($user::class, $user->getId())
         );
 
-        $this->fakePendingOneTimePasswordRepository->insert($pendingOneTimePassword);
+        $this->pendingOneTimePasswordRepository->insert($pendingOneTimePassword);
 
         $input = new Input();
         $input->oneTimePassword = '000000';
@@ -115,7 +121,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             Status::Active
         );
 
-        $this->fakeUserRepository->insert($user);
+        $this->userRepository->insert($user);
 
         $input = new Input();
         $input->oneTimePassword = '000000';
@@ -136,7 +142,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             Status::Active
         );
 
-        $this->fakeUserRepository->insert($user);
+        $this->userRepository->insert($user);
 
         $pendingOneTimePassword = new PendingOneTimePassword(
             new Id(),
@@ -145,7 +151,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             Target::create($user::class, $user->getId())
         );
 
-        $this->fakePendingOneTimePasswordRepository->insert($pendingOneTimePassword);
+        $this->pendingOneTimePasswordRepository->insert($pendingOneTimePassword);
 
         $input = new Input();
         $input->oneTimePassword = '000000';
@@ -166,7 +172,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             Status::Active
         );
 
-        $this->fakeUserRepository->insert($user);
+        $this->userRepository->insert($user);
 
         $pendingOneTimePassword = new PendingOneTimePassword(
             new Id(),
@@ -175,7 +181,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             Target::create($user::class, new Id())
         );
 
-        $this->fakePendingOneTimePasswordRepository->insert($pendingOneTimePassword);
+        $this->pendingOneTimePasswordRepository->insert($pendingOneTimePassword);
 
         $input = new Input();
         $input->oneTimePassword = '000000';
@@ -196,7 +202,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             Status::Active
         );
 
-        $this->fakeUserRepository->insert($user);
+        $this->userRepository->insert($user);
 
         $pendingOneTimePassword = new PendingOneTimePassword(
             new Id(),
@@ -205,7 +211,7 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
             Target::create(\stdClass::class, new Id())
         );
 
-        $this->fakePendingOneTimePasswordRepository->insert($pendingOneTimePassword);
+        $this->pendingOneTimePasswordRepository->insert($pendingOneTimePassword);
 
         $input = new Input();
         $input->oneTimePassword = '000000';

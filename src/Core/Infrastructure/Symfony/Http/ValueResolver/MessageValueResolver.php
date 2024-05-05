@@ -57,8 +57,8 @@ final readonly class MessageValueResolver implements ValueResolverInterface
             }
 
             return [$data];
-        } catch (ExceptionInterface) {
-            throw new BadRequestHttpException('Invalid JSON body.');
+        } catch (ExceptionInterface $e) {
+            throw new BadRequestHttpException('Invalid JSON body.', $e);
         }
     }
 }

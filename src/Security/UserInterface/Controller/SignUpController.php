@@ -14,9 +14,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/sign-up', name: 'sign_up', methods: [Request::METHOD_POST])]
 final class SignUpController extends AbstractController
 {
-    public function __invoke(Input $newUser, CommandBus $commandBus): RedirectResponse
+    public function __invoke(Input $input, CommandBus $commandBus): RedirectResponse
     {
-        $commandBus->execute($newUser);
+        $commandBus->execute($input);
 
         return $this->redirect('/welcome');
     }

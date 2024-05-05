@@ -11,6 +11,7 @@ security:
         main:
             lazy: true
             provider: security_user_provider
+            json_login:
     access_control:
 when@test:
     security:

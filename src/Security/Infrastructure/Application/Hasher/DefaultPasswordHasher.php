@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Security\Infrastructure\Hasher;
+namespace App\Security\Infrastructure\Application\Hasher;
 
 use App\Security\Domain\Application\Hasher\PasswordHasher;
 use App\Security\Domain\Model\Entity\User;

@@ -16,6 +16,44 @@ servers:
 tags:
   - name: Security
 paths:
+  /api/security/confirm-registration:
+    post:
+      tags:
+        - Security
+      summary: Confirm Registration
+      description: Confirm registration of a new organization administrator
+      operationId: confirmRegistration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmRegistrationRequest'
+      responses:
+        302:
+          description: Redirect to onboarding
+          headers:
+            Location:
+              schema:
+                type: string
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        422:
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntityResponse'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
   /api/security/sign-up:
     post:
       tags:
@@ -96,15 +134,26 @@ components:
         example:
             propertyPath: email
             message: This value is already used
+    ConfirmRegistrationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        oneTimePassword:
+          type: string
+      required:
+        - email
+        - oneTimePassword
+      example:
+        email: user@email.com
+        oneTimePassword: 000001
     SignUpRequest:
       type: object
       properties:
         email:
           type: string
-          format: email
         password:
           type: string
-          format: password
       required:
         - email
         - password

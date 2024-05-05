@@ -28,8 +28,8 @@ final readonly class Handler implements CoreHandler
     {
         $user = new User(
             new Id(),
-            Email::fromString($input->email),
-            $this->passwordHasher->hash(PlainPassword::fromString($input->password)),
+            $input->email(),
+            $this->passwordHasher->hash($input->plainPassword()),
             Status::WaitingForConfirmation
         );
 

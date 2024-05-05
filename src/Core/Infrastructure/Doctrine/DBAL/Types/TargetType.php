@@ -20,10 +20,6 @@ final class TargetType extends JsonType
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Target
     {
-        if (!is_int($value)) {
-            return null;
-        }
-
         /** @var array{entity: class-string, id: string} $value */
         $value = parent::convertToPHPValue($value, $platform);
 

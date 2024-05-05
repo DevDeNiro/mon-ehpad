@@ -19,12 +19,12 @@ final class Input implements Command
     #[Assert\Regex(pattern: '/^[0-9]{6}$/')]
     public string $oneTimePassword;
 
-    public function getEmail(): Email
+    public function email(): Email
     {
         return Email::fromString($this->email);
     }
 
-    public function getOneTimePassword(): OneTimePassword
+    public function oneTimePassword(): OneTimePassword
     {
         return OneTimePassword::fromString($this->oneTimePassword);
     }

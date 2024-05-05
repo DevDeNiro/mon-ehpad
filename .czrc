@@ -35,7 +35,7 @@
                 {
                   "emoji": "📝",
                   "code": ":memo:",
-                  "description": "Add or update documentation.",
+                  "description": "Add or update documentation, OAS, etc...",
                   "name": "docs"
                 },
                 {
