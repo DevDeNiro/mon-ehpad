@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Component\Security\Symfony\Security;
 
 use App\Core\Domain\Model\ValueObject\Email;
-use App\Security\Domain\Port\Repository\UserRepository;
+use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Infrastructure\Symfony\Security\SymfonyUser;
 use App\Security\Infrastructure\Symfony\Security\UserProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -21,7 +21,6 @@ final class UserProviderTest extends KernelTestCase
 
     private UserRepository $userRepository;
 
-    #[\Override]
     protected function setUp(): void
     {
         self::bootKernel();

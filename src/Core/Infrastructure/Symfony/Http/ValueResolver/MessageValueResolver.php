@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Infrastructure\Symfony\Http\ValueResolver;
 
-use App\Core\Domain\CQRS\Command;
-use App\Core\Domain\CQRS\Query;
+use App\Core\Domain\UseCase\Command;
+use App\Core\Domain\UseCase\Query;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -18,16 +18,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final readonly class MessageValueResolver implements ValueResolverInterface
 {
-    public function __construct(
-        private SerializerInterface $serializer,
-        private ValidatorInterface $validator
-    ) {
+    public function __construct(private SerializerInterface $serializer, private ValidatorInterface $validator)
+    {
     }
 
     /**
      * @return iterable<Query|Command>
      */
-    #[\Override]
     public function resolve(Request $request, ArgumentMetadata $argumentMetadata): iterable
     {
         if (

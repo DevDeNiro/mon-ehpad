@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Core\Infrastructure\Symfony\CQRS;
 
-use App\Core\Domain\CQRS\Event;
-use App\Core\Domain\CQRS\EventBus;
+use App\Core\Domain\UseCase\Event;
+use App\Core\Domain\Application\CQRS\EventBus;
 
 final class FakeEventBus implements EventBus
 {
@@ -14,7 +14,6 @@ final class FakeEventBus implements EventBus
      */
     private array $events = [];
 
-    #[\Override]
     public function dispatch(Event $event): void
     {
         $this->events[] = $event;

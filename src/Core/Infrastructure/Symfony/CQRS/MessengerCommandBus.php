@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Infrastructure\Symfony\CQRS;
 
-use App\Core\Domain\CQRS\Command;
-use App\Core\Domain\CQRS\CommandBus;
+use App\Core\Domain\UseCase\Command;
+use App\Core\Domain\Application\CQRS\CommandBus;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -20,7 +20,6 @@ final class MessengerCommandBus implements CommandBus
         $this->messageBus = $messageBus;
     }
 
-    #[\Override]
     public function execute(Command $command): mixed
     {
         return $this->handleQuery($command);

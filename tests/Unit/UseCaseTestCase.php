@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Core\Domain\CQRS\Command;
-use App\Core\Domain\CQRS\Event;
-use App\Core\Domain\CQRS\Handler;
-use App\Core\Domain\CQRS\Query;
+use App\Core\Domain\UseCase\Command;
+use App\Core\Domain\UseCase\Event;
+use App\Core\Domain\UseCase\Handler;
+use App\Core\Domain\UseCase\Query;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
@@ -15,7 +15,6 @@ use Symfony\Component\Validator\ContainerConstraintValidatorFactory;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Tests\Fixtures\Core\Infrastructure\Notifier\FakeNotifier;
 use Tests\Fixtures\Core\Infrastructure\Symfony\CQRS\FakeEventBus;
 use Tests\Fixtures\Core\Infrastructure\Symfony\DependencyInjection\ValidatorContainer;
 
@@ -28,8 +27,6 @@ abstract class UseCaseTestCase extends TestCase
     private static ?ValidatorInterface $validator = null;
 
     private static ?FakeEventBus $fakeEventBus = null;
-
-    private static ?FakeNotifier $fakeNotifier = null;
 
     public static function eventBus(): FakeEventBus
     {
@@ -53,15 +50,6 @@ abstract class UseCaseTestCase extends TestCase
             ->getValidator();
 
         return $this;
-    }
-
-    protected static function notifier(): FakeNotifier
-    {
-        if (! self::$fakeNotifier instanceof FakeNotifier) {
-            self::$fakeNotifier = new FakeNotifier();
-        }
-
-        return self::$fakeNotifier;
     }
 
     protected function setUseCase(Handler $handler): void

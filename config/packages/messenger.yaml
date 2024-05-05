@@ -18,7 +18,7 @@ framework:
             sync: 'sync://'
 
         routing:
-            App\Core\Domain\CQRS\Event: async
+            App\Core\Domain\UseCase\Event: async
 
 when@test:
     framework:

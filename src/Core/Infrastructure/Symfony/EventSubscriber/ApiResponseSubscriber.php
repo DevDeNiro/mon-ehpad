@@ -13,12 +13,10 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final readonly class ApiResponseSubscriber implements EventSubscriberInterface
 {
-    public function __construct(
-        private SerializerInterface $serializer
-    ) {
+    public function __construct(private SerializerInterface $serializer)
+    {
     }
 
-    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

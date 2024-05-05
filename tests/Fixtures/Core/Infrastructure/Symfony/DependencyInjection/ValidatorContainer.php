@@ -17,7 +17,6 @@ final readonly class ValidatorContainer implements ContainerInterface
     ) {
     }
 
-    #[\Override]
     public function get($id): object
     {
         if ($this->has($id) === false) {
@@ -27,7 +26,6 @@ final readonly class ValidatorContainer implements ContainerInterface
         return $this->services[$id];
     }
 
-    #[\Override]
     public function has($id): bool
     {
         return isset($this->services[$id]);

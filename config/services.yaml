@@ -1,23 +1,22 @@
 parameters:
 
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-    _instanceof:
-        App\Core\Domain\CQRS\Handler:
-            tags: ['messenger.message_handler']
-    App\:
-        resource: '../src/'
-        exclude:
-            - '../src/Core/Domain/Model/ValueObject/'
-            - '../src/Core/Domain/Model/Notification/'
-            - '../src/Core/Domain/Model/Entity/'
-            - '../src/Core/Infrastructure/Symfony/Kernel.php'
-            - '../src/Security/Domain/Model/Entity/'
-            - '../src/Security/Domain/Model/ValueObject/'
-            - '../src/Security/Domain/Model/Notification/'
-            - '../src/Security/Infrastructure/Doctrine/Entity/'
+  _defaults:
+    autowire: true
+    autoconfigure: true
 
-    app.security.user_provider:
-        class: App\Security\Infrastructure\Symfony\Security\UserProvider
+  _instanceof:
+    App\Core\Domain\UseCase\Handler:
+      tags: ['messenger.message_handler']
+
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/*/Domain/Model/'
+      - '../src/*/Domain/UseCase/**/Input.php'
+      - '../src/*/Domain/UseCase/**/Output.php'
+      - '../src/Core/Infrastructure/Symfony/Kernel.php'
+      - '../src/*/Infrastructure/Doctrine/Entity/'
+
+  app.security.user_provider:
+    class: App\Security\Infrastructure\Symfony\Security\UserProvider

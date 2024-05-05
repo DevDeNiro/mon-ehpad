@@ -6,8 +6,8 @@ namespace Tests\Unit\Security;
 
 use App\Core\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\Event\UserRegistered;
-use App\Security\Domain\UseCase\SignUp\NewUser;
-use App\Security\Domain\UseCase\SignUp\SignUp;
+use App\Security\Domain\UseCase\SignUp\Input;
+use App\Security\Domain\UseCase\SignUp\Handler;
 use App\Security\Domain\Validation\Validator\UniqueEmailValidator;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -23,7 +23,6 @@ final class SignUpTest extends UseCaseTestCase
 
     private FakeUserRepository $fakeUserRepository;
 
-    #[\Override]
     protected function setUp(): void
     {
         $this->fakeUserRepository = new FakeUserRepository();
@@ -32,7 +31,7 @@ final class SignUpTest extends UseCaseTestCase
         ]);
 
         $this->setUseCase(
-            new SignUp(
+            new Handler(
                 $this->fakeUserRepository,
                 new FakePasswordHasher(),
                 self::eventBus(),
@@ -45,7 +44,7 @@ final class SignUpTest extends UseCaseTestCase
     {
         static::setTestNow(new Chronos('2024-01-01 00:00:00'));
 
-        $newUser = new NewUser();
+        $newUser = new Input();
         $newUser->email = 'user@email.com';
         $newUser->password = '4234df00-45dd-49a4-b303-a75dbf8b10d8!';
 
@@ -53,8 +52,8 @@ final class SignUpTest extends UseCaseTestCase
 
         $user = $this->fakeUserRepository->findByEmail(Email::create($newUser->email));
 
-        self::assertSame('hashed_password', $user->password()->value());
-        self::assertEventDispatched(new UserRegistered($user->id()));
+        self::assertSame('hashed_password', $user->getPassword()->value());
+        self::assertEventDispatched(new UserRegistered($user->getId()));
     }
 
     /**
@@ -62,7 +61,7 @@ final class SignUpTest extends UseCaseTestCase
      */
     #[Test]
     #[DataProvider('provideInvalidData')]
-    public function shouldRaiseValidationFailedException(array $expectedViolations, NewUser $newUser): void
+    public function shouldRaiseValidationFailedException(array $expectedViolations, Input $newUser): void
     {
         $this->expectedViolations($expectedViolations);
         $this->handle($newUser);
@@ -71,7 +70,7 @@ final class SignUpTest extends UseCaseTestCase
     /**
      * @return iterable<array{
      *     expectedViolations: array<array{propertyPath: string, message: string}>,
-     *     newUser: NewUser
+     *     newUser: Input
      * }>
      */
     public static function provideInvalidData(): iterable
@@ -127,9 +126,9 @@ final class SignUpTest extends UseCaseTestCase
         ];
     }
 
-    private static function createNewUser(string $email, string $password): NewUser
+    private static function createNewUser(string $email, string $password): Input
     {
-        $newUser = new NewUser();
+        $newUser = new Input();
         $newUser->email = $email;
         $newUser->password = $password;
 

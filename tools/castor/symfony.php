@@ -84,11 +84,11 @@ function router(
 function container(
     #[AsOption]
     ?string $env = 'dev',
-    #[AsArgument]
+    #[AsOption]
     ?string $name = null
 ): void {
     io()->title('Debug container');
-    $command = ['php bin/console debug:container'];
+    $command = ['php', 'bin/console', 'debug:container'];
     if ($name !== null) {
         $command[] = $name;
     }

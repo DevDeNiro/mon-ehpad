@@ -8,12 +8,10 @@ use App\Core\Domain\Validation\Assert;
 
 final readonly class FullName implements Str
 {
-    private function __construct(
-        private string $value
-    ) {
+    private function __construct(private string $value)
+    {
     }
 
-    #[\Override]
     public function __toString(): string
     {
         return $this->value;

@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Tests\Fixtures\Core\Domain\UseCase\FakeCommand\FakeCommand;
+use Tests\Fixtures\Core\Domain\UseCase\FakeCommand\Input;
 use function Safe\json_encode;
 
 #[CoversClass(MessageValueResolver::class)]
@@ -22,7 +22,6 @@ final class MessageValueResolverTest extends KernelTestCase
 {
     private MessageValueResolver $messageValueResolver;
 
-    #[\Override]
     protected function setUp(): void
     {
         self::bootKernel();
@@ -47,13 +46,13 @@ final class MessageValueResolverTest extends KernelTestCase
             ])
         );
 
-        $argumentMetadata = new ArgumentMetadata('foo', FakeCommand::class, false, false, null);
+        $argumentMetadata = new ArgumentMetadata('foo', Input::class, false, false, null);
 
         $data = $this->messageValueResolver->resolve($request, $argumentMetadata);
         $data = iterator_to_array($data);
         self::assertCount(1, $data);
         $fakeCommand = $data[0];
-        self::assertInstanceOf(FakeCommand::class, $fakeCommand);
+        self::assertInstanceOf(Input::class, $fakeCommand);
         self::assertSame('bar', $fakeCommand->foo);
     }
 
@@ -81,7 +80,7 @@ final class MessageValueResolverTest extends KernelTestCase
             method: 'POST',
             content: 'fail'
         );
-        $argumentMetadata = new ArgumentMetadata('foo', FakeCommand::class, false, false, null);
+        $argumentMetadata = new ArgumentMetadata('foo', Input::class, false, false, null);
         $this->expectException(BadRequestHttpException::class);
         $this->messageValueResolver->resolve($request, $argumentMetadata);
     }
@@ -96,7 +95,7 @@ final class MessageValueResolverTest extends KernelTestCase
                 'foo' => '',
             ])
         );
-        $argumentMetadata = new ArgumentMetadata('foo', FakeCommand::class, false, false, null);
+        $argumentMetadata = new ArgumentMetadata('foo', Input::class, false, false, null);
         $this->expectException(ValidationFailedException::class);
         $this->messageValueResolver->resolve($request, $argumentMetadata);
     }

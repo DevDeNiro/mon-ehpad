@@ -21,12 +21,10 @@ use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 final readonly class ApiExceptionSubscriber implements EventSubscriberInterface
 {
-    public function __construct(
-        private SerializerInterface $serializer
-    ) {
+    public function __construct(private SerializerInterface $serializer)
+    {
     }
 
-    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

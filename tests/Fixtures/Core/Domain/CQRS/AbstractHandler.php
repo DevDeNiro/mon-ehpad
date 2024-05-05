@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Core\Domain\CQRS;
 
-use App\Core\Domain\CQRS\Command;
-use App\Core\Domain\CQRS\Event;
-use App\Core\Domain\CQRS\Handler;
-use App\Core\Domain\CQRS\Query;
+use App\Core\Domain\UseCase\Command;
+use App\Core\Domain\UseCase\Event;
+use App\Core\Domain\UseCase\Handler;
+use App\Core\Domain\UseCase\Query;
 
 abstract class AbstractHandler implements Handler
 {

@@ -10,8 +10,6 @@ use function Castor\run;
 function fix(): void
 {
     io()->title('Run all fixers');
-    fixRector();
-    fixEcs();
 }
 
 #[AsTask(name: 'ecs', namespace: 'fix', description: 'Run Easy Coding Standard')]

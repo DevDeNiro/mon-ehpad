@@ -17,7 +17,6 @@ abstract class BusTestCase extends KernelTestCase
 
     private MessageBusInterface $messageBus;
 
-    #[\Override]
     protected function setUp(): void
     {
         self::bootKernel();

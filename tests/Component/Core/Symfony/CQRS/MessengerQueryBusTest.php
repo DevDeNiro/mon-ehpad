@@ -10,8 +10,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Messenger\Exception\ValidationFailedException;
 use Tests\Component\BusTestCase;
-use Tests\Fixtures\Core\Domain\UseCase\FakeQuery\FakeHandler;
-use Tests\Fixtures\Core\Domain\UseCase\FakeQuery\FakeQuery;
+use Tests\Fixtures\Core\Domain\UseCase\FakeQuery\Handler;
+use Tests\Fixtures\Core\Domain\UseCase\FakeQuery\Input;
 
 #[CoversClass(MessengerQueryBus::class)]
 #[TestDox('Messenger bus : ' . MessengerQueryBus::class)]
@@ -22,9 +22,9 @@ final class MessengerQueryBusTest extends BusTestCase
     #[Test]
     public function shouldExecuteCommandSuccessfully(): void
     {
-        $handler = $this->getHandler(FakeHandler::class);
+        $handler = $this->getHandler(Handler::class);
         $messengerQueryBus = new MessengerQueryBus($this->bus());
-        $foo = $messengerQueryBus->fetch(new FakeQuery('bar'));
+        $foo = $messengerQueryBus->fetch(new Input('bar'));
         self::assertSame('bar', $foo);
         self::assertCount(1, $handler->messages());
     }
@@ -32,10 +32,10 @@ final class MessengerQueryBusTest extends BusTestCase
     #[Test]
     public function shouldFailedOnValidation(): void
     {
-        $handler = $this->getHandler(FakeHandler::class);
+        $handler = $this->getHandler(Handler::class);
         $messengerQueryBus = new MessengerQueryBus($this->bus());
         self::expectException(ValidationFailedException::class);
-        $messengerQueryBus->fetch(new FakeQuery());
+        $messengerQueryBus->fetch(new Input());
         self::assertCount(0, $handler->messages());
     }
 }

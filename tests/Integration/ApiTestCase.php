@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use App\Core\Domain\CQRS\EventBus;
+use App\Core\Domain\Application\CQRS\EventBus;
 use Safe\Exceptions\JsonException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\AbstractBrowser;

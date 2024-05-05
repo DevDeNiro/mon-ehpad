@@ -20,26 +20,22 @@ final readonly class SymfonyUser implements UserInterface, PasswordAuthenticated
         return $this->user;
     }
 
-    #[\Override]
     public function getPassword(): string
     {
-        return $this->user->password()->value();
+        return $this->user->getPassword()->value();
     }
 
-    #[\Override]
     public function getRoles(): array
     {
         return ['ROLE_USER'];
     }
 
-    #[\Override]
     public function eraseCredentials(): void
     {
     }
 
-    #[\Override]
     public function getUserIdentifier(): string
     {
-        return $this->user->email()->value();
+        return $this->user->getEmail()->value();
     }
 }

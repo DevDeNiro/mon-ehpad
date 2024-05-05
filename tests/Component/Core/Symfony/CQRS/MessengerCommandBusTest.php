@@ -10,8 +10,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Messenger\Exception\ValidationFailedException;
 use Tests\Component\BusTestCase;
-use Tests\Fixtures\Core\Domain\UseCase\FakeCommand\FakeCommand;
-use Tests\Fixtures\Core\Domain\UseCase\FakeCommand\FakeHandler;
+use Tests\Fixtures\Core\Domain\UseCase\FakeCommand\Input;
+use Tests\Fixtures\Core\Domain\UseCase\FakeCommand\Handler;
 
 #[CoversClass(MessengerCommandBus::class)]
 #[TestDox('Messenger bus : ' . MessengerCommandBus::class)]
@@ -22,19 +22,19 @@ final class MessengerCommandBusTest extends BusTestCase
     #[Test]
     public function shouldExecuteCommandSuccessfully(): void
     {
-        $handler = $this->getHandler(FakeHandler::class);
+        $handler = $this->getHandler(Handler::class);
         $messengerCommandBus = new MessengerCommandBus($this->bus());
-        $messengerCommandBus->execute(new FakeCommand('bar'));
+        $messengerCommandBus->execute(new Input('bar'));
         self::assertCount(1, $handler->messages());
     }
 
     #[Test]
     public function shouldFailedOnValidation(): void
     {
-        $handler = $this->getHandler(FakeHandler::class);
+        $handler = $this->getHandler(Handler::class);
         $messengerCommandBus = new MessengerCommandBus($this->bus());
         self::expectException(ValidationFailedException::class);
-        $messengerCommandBus->execute(new FakeCommand());
+        $messengerCommandBus->execute(new Input());
         self::assertCount(0, $handler->messages());
     }
 }

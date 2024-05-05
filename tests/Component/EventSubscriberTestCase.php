@@ -24,14 +24,12 @@ abstract class EventSubscriberTestCase extends KernelTestCase
 
     private EventDispatcherInterface $eventDispatcher;
 
-    #[\Override]
     public static function setUpBeforeClass(): void
     {
         self::assertTrue(class_exists(static::EVENT_SUBSCRIBER));
         self::assertContains(EventSubscriberInterface::class, class_implements(static::EVENT_SUBSCRIBER));
     }
 
-    #[\Override]
     public static function tearDownAfterClass(): void
     {
         self::assertCount(
@@ -40,7 +38,6 @@ abstract class EventSubscriberTestCase extends KernelTestCase
         );
     }
 
-    #[\Override]
     protected function setUp(): void
     {
         self::bootKernel();

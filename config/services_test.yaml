@@ -1,13 +1,29 @@
+parameters:
+
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
+  _defaults:
+    autowire: true
+    autoconfigure: true
 
-    _instanceof:
-        App\Core\Domain\CQRS\Handler:
-            tags: ['messenger.message_handler']
+  _instanceof:
+    App\Core\Domain\UseCase\Handler:
+      tags: ['messenger.message_handler']
 
-    Tests\Fixtures\:
-        resource: '../tests/Fixtures/'
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/*/Domain/Model/'
+      - '../src/*/Domain/UseCase/**/Input.php'
+      - '../src/*/Domain/UseCase/**/Output.php'
+      - '../src/Core/Infrastructure/Symfony/Kernel.php'
+      - '../src/*/Infrastructure/Doctrine/Entity/'
 
-    App\Core\Domain\CQRS\EventBus: '@Tests\Fixtures\Core\Infrastructure\Symfony\CQRS\FakeEventBus'
+  Tests\Fixtures\:
+    resource: '../tests/Fixtures/'
+    exclude:
+      - '../tests/Fixtures/*/Domain/Model/'
+      - '../tests/Fixtures/*/Domain/UseCase/**/Input.php'
+      - '../tests/Fixtures/*/Domain/UseCase/**/Output.php'
+      - '../tests/Fixtures/*/Infrastructure/Doctrine/Entity/'
+
+  App\Core\Domain\Application\CQRS\EventBus: '@Tests\Fixtures\Core\Infrastructure\Symfony\CQRS\FakeEventBus'

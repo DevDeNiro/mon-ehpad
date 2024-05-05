@@ -24,9 +24,4 @@ trait UseCaseAssertionsTrait
         $this->expectException(ValidationFailedException::class);
         $this->expectedViolations = $expectedViolations;
     }
-
-    public static function assertEmailSent(): void
-    {
-        self::assertCount(1, static::notifier()->sentEmails());
-    }
 }
