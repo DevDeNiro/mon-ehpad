@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Doctrine\Repository;
 
-use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Domain\Model\ValueObject\Id;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Enum\Status;
 use App\Security\Domain\Model\Exception\UserException;
+use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\Password;
 use App\Security\Infrastructure\Doctrine\Entity\DoctrineUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -50,7 +50,7 @@ final class DoctrineUserRepository extends ServiceEntityRepository implements Us
     public function findById(Id $id): User
     {
         /** @var DoctrineUser|null $doctrineUser */
-        $doctrineUser = $this->find((string) $id);
+        $doctrineUser = $this->find($id);
 
         if ($doctrineUser === null) {
             throw UserException::idNotFound($id);
@@ -69,7 +69,7 @@ final class DoctrineUserRepository extends ServiceEntityRepository implements Us
     public function save(User $user): void
     {
         /** @var DoctrineUser|null $doctrineUser */
-        $doctrineUser = $this->find((string) $user->getId());
+        $doctrineUser = $this->find($user->getId());
 
         if ($doctrineUser === null) {
             throw UserException::idNotFound($user->getId());
@@ -83,9 +83,9 @@ final class DoctrineUserRepository extends ServiceEntityRepository implements Us
     private function hydrateUserFromDoctrineEntity(DoctrineUser $doctrineUser): User
     {
         return new User(
-            Id::fromUlid($doctrineUser->id),
-            Email::create($doctrineUser->email),
-            Password::create($doctrineUser->password),
+            Id::fromString((string) $doctrineUser->id),
+            Email::fromString($doctrineUser->email),
+            Password::fromString($doctrineUser->password),
             Status::from($doctrineUser->status)
         );
     }

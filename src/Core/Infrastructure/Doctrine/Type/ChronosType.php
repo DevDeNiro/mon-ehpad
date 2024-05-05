@@ -25,7 +25,7 @@ final class ChronosType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Chronos
     {
-        if (! is_int($value)) {
+        if (!is_int($value)) {
             return null;
         }
 
@@ -38,7 +38,7 @@ final class ChronosType extends Type
             return $value;
         }
 
-        if (! $value instanceof Chronos) {
+        if (!$value instanceof Chronos) {
             throw ConversionException::conversionFailedInvalidType($value, self::NAME, [Chronos::class]);
         }
 

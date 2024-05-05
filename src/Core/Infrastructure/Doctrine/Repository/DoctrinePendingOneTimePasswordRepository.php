@@ -47,7 +47,7 @@ final class DoctrinePendingOneTimePasswordRepository extends ServiceEntityReposi
             throw OneTimePasswordException::noOneTimePasswordAvailable();
         }
 
-        return OneTimePassword::create((string) $code);
+        return OneTimePassword::fromString((string) $code);
     }
 
     public function findByOneTimePassword(OneTimePassword $oneTimePassword): PendingOneTimePassword
@@ -87,8 +87,8 @@ final class DoctrinePendingOneTimePasswordRepository extends ServiceEntityReposi
     private function hydrateFromDoctrineEntity(DoctrinePendingOneTimePassword $pendingOneTimePassword): PendingOneTimePassword
     {
         return new PendingOneTimePassword(
-            Id::fromUlid($pendingOneTimePassword->id),
-            OneTimePassword::create($pendingOneTimePassword->oneTimePassword),
+            Id::fromString((string) $pendingOneTimePassword->id),
+            OneTimePassword::fromString($pendingOneTimePassword->oneTimePassword),
             $pendingOneTimePassword->expiresAt,
             $pendingOneTimePassword->target
         );

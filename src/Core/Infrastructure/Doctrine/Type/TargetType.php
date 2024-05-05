@@ -22,7 +22,7 @@ final class TargetType extends JsonType
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Target
     {
-        if (! is_int($value)) {
+        if (!is_int($value)) {
             return null;
         }
 

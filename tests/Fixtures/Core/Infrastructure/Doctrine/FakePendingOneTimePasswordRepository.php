@@ -27,7 +27,7 @@ final class FakePendingOneTimePasswordRepository implements PendingOneTimePasswo
             $code = sprintf('%06d', random_int(0, 999999));
         } while (in_array($code, $this->usedCodes, true));
 
-        return OneTimePassword::create($code);
+        return OneTimePassword::fromString($code);
     }
 
     public function insert(PendingOneTimePassword $pendingOneTimePassword): void

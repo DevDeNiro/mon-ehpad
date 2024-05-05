@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Component\Hasher;
 
-use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Domain\Model\ValueObject\Id;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Enum\Status;
+use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\PlainPassword;
 use App\Security\Infrastructure\Hasher\DefaultPasswordHasher;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -33,14 +33,14 @@ final class PasswordHasherTest extends KernelTestCase
 
         $defaultPasswordHasher = new DefaultPasswordHasher($userPasswordHasher);
 
-        $plainPassword = PlainPassword::create('Password123!');
+        $plainPassword = PlainPassword::fromString('Password123!');
 
         self::assertTrue(
             $defaultPasswordHasher->verify(
                 $plainPassword,
                 new User(
-                    Id::generate(),
-                    Email::create('user@email.com'),
+                    new Id(),
+                    Email::fromString('user@email.com'),
                     $defaultPasswordHasher->hash($plainPassword),
                     Status::Active
                 )

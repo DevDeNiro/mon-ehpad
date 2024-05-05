@@ -22,7 +22,7 @@ final readonly class DefaultPasswordHasher implements PasswordHasher
 
     public function hash(PlainPassword $plainPassword): Password
     {
-        return Password::create(
+        return Password::fromString(
             $this->userPasswordHasher->hashPassword(
                 new class() implements PasswordAuthenticatedUserInterface {
                     /**

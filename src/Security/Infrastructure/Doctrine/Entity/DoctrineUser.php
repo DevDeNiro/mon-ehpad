@@ -33,7 +33,7 @@ class DoctrineUser
     public static function fromUser(User $user): self
     {
         $entity = new self();
-        $entity->id = $user->getId()->value();
+        $entity->id = $user->getId();
         $entity->email = $user->getEmail()->value();
         $entity->password = $user->getPassword()->value();
         $entity->status = $user->getStatus()->value;

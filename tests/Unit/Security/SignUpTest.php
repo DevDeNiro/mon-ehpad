@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Security;
 
-use App\Core\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\Event\UserRegistered;
-use App\Security\Domain\UseCase\SignUp\Input;
+use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\UseCase\SignUp\Handler;
+use App\Security\Domain\UseCase\SignUp\Input;
 use App\Security\Domain\Validation\Validator\UniqueEmailValidator;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -50,7 +50,7 @@ final class SignUpTest extends UseCaseTestCase
 
         $this->handle($newUser);
 
-        $user = $this->fakeUserRepository->findByEmail(Email::create($newUser->email));
+        $user = $this->fakeUserRepository->findByEmail(Email::fromString($newUser->email));
 
         self::assertSame('hashed_password', $user->getPassword()->value());
         self::assertEventDispatched(new UserRegistered($user->getId()));

@@ -37,7 +37,7 @@ class DoctrinePendingOneTimePassword
     public static function create(PendingOneTimePassword $pendingOneTimePassword): self
     {
         $self = new self();
-        $self->id = $pendingOneTimePassword->getId()->value();
+        $self->id = $pendingOneTimePassword->getId();
         $self->oneTimePassword = $pendingOneTimePassword->getOneTimePassword()->value();
         $self->expiresAt = $pendingOneTimePassword->getExpiresAt();
         $self->target = $pendingOneTimePassword->getTarget();

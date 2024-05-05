@@ -33,7 +33,7 @@ final class UserFixtures extends Fixture
         $doctrineUser = new DoctrineUser();
         $doctrineUser->id = new Ulid(self::ADMIN_ID);
         $doctrineUser->email = sprintf(self::EMAIL_FORMAT, $index);
-        $doctrineUser->password = (string) $this->passwordHasher->hash(PlainPassword::create('Password123!'));
+        $doctrineUser->password = (string) $this->passwordHasher->hash(PlainPassword::fromString('Password123!'));
         $doctrineUser->status = Status::WaitingForConfirmation->value;
 
         return $doctrineUser;

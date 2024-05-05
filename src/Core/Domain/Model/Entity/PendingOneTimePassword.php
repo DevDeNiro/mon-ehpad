@@ -50,6 +50,6 @@ final readonly class PendingOneTimePassword
             return false;
         }
 
-        return $this->target->id()->value() === $id->value();
+        return $this->target->id()->equals($id);
     }
 }

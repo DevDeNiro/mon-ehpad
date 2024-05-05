@@ -27,7 +27,7 @@ final readonly class Handler implements CoreHandler
         $user = $this->userRepository->findById($userRegistered->getId());
 
         $pendingOneTimePassword = new PendingOneTimePassword(
-            Id::generate(),
+            new Id(),
             $this->pendingOneTimePasswordRepository->generateOneTimePassword(),
             Chronos::now()->addMinutes(15),
             Target::create(User::class, $user->getId())

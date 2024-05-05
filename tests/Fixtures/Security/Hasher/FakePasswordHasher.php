@@ -13,7 +13,7 @@ final readonly class FakePasswordHasher implements PasswordHasher
 {
     public function hash(PlainPassword $plainPassword): Password
     {
-        return Password::create('hashed_password');
+        return Password::fromString('hashed_password');
     }
 
     public function verify(PlainPassword $plainPassword, User $user): bool

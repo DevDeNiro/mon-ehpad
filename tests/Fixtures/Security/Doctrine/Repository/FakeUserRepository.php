@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Security\Doctrine\Repository;
 
-use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Domain\Model\ValueObject\Id;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Enum\Status;
 use App\Security\Domain\Model\Exception\UserException;
+use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\Password;
 
 final class FakeUserRepository implements UserRepository
@@ -22,9 +22,9 @@ final class FakeUserRepository implements UserRepository
     public function __construct()
     {
         $this->users['admin+1@email.com'] = new User(
-            Id::generate(),
-            Email::create('admin+1@email.com'),
-            Password::create('hashed_password'),
+            new Id(),
+            Email::fromString('admin+1@email.com'),
+            Password::fromString('hashed_password'),
             Status::WaitingForConfirmation
         );
     }
@@ -56,7 +56,7 @@ final class FakeUserRepository implements UserRepository
     public function findById(Id $id): User
     {
         foreach ($this->users as $user) {
-            if ($user->getId()->value()->equals($id->value())) {
+            if ($user->getId()->equals($id)) {
                 return $user;
             }
         }

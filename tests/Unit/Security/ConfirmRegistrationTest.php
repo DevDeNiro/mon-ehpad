@@ -6,13 +6,13 @@ namespace Tests\Unit\Security;
 
 use App\Core\Domain\Model\Entity\PendingOneTimePassword;
 use App\Core\Domain\Model\Exception\OneTimePasswordException;
-use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Domain\Model\ValueObject\Id;
 use App\Core\Domain\Model\ValueObject\OneTimePassword;
 use App\Core\Domain\Model\ValueObject\Target;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Enum\Status;
 use App\Security\Domain\Model\Exception\UserException;
+use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\Password;
 use App\Security\Domain\UseCase\ConfirmRegistration\Handler;
 use App\Security\Domain\UseCase\ConfirmRegistration\Input;
@@ -49,17 +49,17 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
     public function shouldConfirmRegistration(): void
     {
         $user = new User(
-            Id::generate(),
-            Email::create('user@email.com'),
-            Password::create('hashed_password'),
+            new Id(),
+            Email::fromString('user@email.com'),
+            Password::fromString('hashed_password'),
             Status::WaitingForConfirmation
         );
 
         $this->fakeUserRepository->insert($user);
 
         $pendingOneTimePassword = new PendingOneTimePassword(
-            Id::generate(),
-            OneTimePassword::create('000000'),
+            new Id(),
+            OneTimePassword::fromString('000000'),
             new Chronos('+1 hour'),
             Target::create($user::class, $user->getId())
         );
@@ -79,17 +79,17 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
     public function shouldRaiseAndExceptionDueToUserAlreadyActive(): void
     {
         $user = new User(
-            Id::generate(),
-            Email::create('user@email.com'),
-            Password::create('hashed_password'),
+            new Id(),
+            Email::fromString('user@email.com'),
+            Password::fromString('hashed_password'),
             Status::Active
         );
 
         $this->fakeUserRepository->insert($user);
 
         $pendingOneTimePassword = new PendingOneTimePassword(
-            Id::generate(),
-            OneTimePassword::create('000000'),
+            new Id(),
+            OneTimePassword::fromString('000000'),
             new Chronos('+1 hour'),
             Target::create($user::class, $user->getId())
         );
@@ -109,9 +109,9 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
     public function shouldRaiseAndExceptionDueToNonExistingOneTimePassword(): void
     {
         $user = new User(
-            Id::generate(),
-            Email::create('user@email.com'),
-            Password::create('hashed_password'),
+            new Id(),
+            Email::fromString('user@email.com'),
+            Password::fromString('hashed_password'),
             Status::Active
         );
 
@@ -130,17 +130,17 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
     public function shouldRaiseAndExceptionDueToExpiredOneTimePassword(): void
     {
         $user = new User(
-            Id::generate(),
-            Email::create('user@email.com'),
-            Password::create('hashed_password'),
+            new Id(),
+            Email::fromString('user@email.com'),
+            Password::fromString('hashed_password'),
             Status::Active
         );
 
         $this->fakeUserRepository->insert($user);
 
         $pendingOneTimePassword = new PendingOneTimePassword(
-            Id::generate(),
-            OneTimePassword::create('000000'),
+            new Id(),
+            OneTimePassword::fromString('000000'),
             new Chronos('-1 hour'),
             Target::create($user::class, $user->getId())
         );
@@ -160,19 +160,19 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
     public function shouldRaiseAndExceptionDueToMismatchWithTargetId(): void
     {
         $user = new User(
-            Id::generate(),
-            Email::create('user@email.com'),
-            Password::create('hashed_password'),
+            new Id(),
+            Email::fromString('user@email.com'),
+            Password::fromString('hashed_password'),
             Status::Active
         );
 
         $this->fakeUserRepository->insert($user);
 
         $pendingOneTimePassword = new PendingOneTimePassword(
-            Id::generate(),
-            OneTimePassword::create('000000'),
+            new Id(),
+            OneTimePassword::fromString('000000'),
             new Chronos('+1 hour'),
-            Target::create($user::class, Id::generate())
+            Target::create($user::class, new Id())
         );
 
         $this->fakePendingOneTimePasswordRepository->insert($pendingOneTimePassword);
@@ -190,19 +190,19 @@ final class ConfirmRegistrationTest extends UseCaseTestCase
     public function shouldRaiseAndExceptionDueToMismatchWithTargetEntity(): void
     {
         $user = new User(
-            Id::generate(),
-            Email::create('user@email.com'),
-            Password::create('hashed_password'),
+            new Id(),
+            Email::fromString('user@email.com'),
+            Password::fromString('hashed_password'),
             Status::Active
         );
 
         $this->fakeUserRepository->insert($user);
 
         $pendingOneTimePassword = new PendingOneTimePassword(
-            Id::generate(),
-            OneTimePassword::create('000000'),
+            new Id(),
+            OneTimePassword::fromString('000000'),
             new Chronos('+1 hour'),
-            Target::create(\stdClass::class, Id::generate())
+            Target::create(\stdClass::class, new Id())
         );
 
         $this->fakePendingOneTimePasswordRepository->insert($pendingOneTimePassword);
