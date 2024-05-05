@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Infrastructure\Doctrine\Type;
+namespace App\Core\Infrastructure\Doctrine\DBAL\Types;
 
 use Cake\Chronos\Chronos;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -25,24 +25,24 @@ final class ChronosType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Chronos
     {
-        if (!is_int($value)) {
+        if (!is_string($value)) {
             return null;
         }
 
-        return Chronos::createFromTimestamp($value);
+        return Chronos::createFromFormat('Y-m-d H:i:s.u', $value);
     }
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
-        if ($value === null) {
-            return $value;
+        if (null === $value) {
+            return null;
         }
 
         if (!$value instanceof Chronos) {
             throw ConversionException::conversionFailedInvalidType($value, self::NAME, [Chronos::class]);
         }
 
-        return $value->getTimestamp();
+        return $value->format('Y-m-d H:i:s.u');
     }
 
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool

@@ -45,7 +45,7 @@ function dbMigration(): void
 function dbFixtures(#[AsOption] ?string $env = 'dev'): void
 {
     io()->title('Load fixtures');
-    run('symfony php bin/console doctrine:fixtures:load -n', [
+    run('symfony php bin/console hautelook:fixtures:load -n --no-bundles -vv', [
         'XDEBUG_MODE' => 'off',
         'APP_ENV' => $env,
     ]);

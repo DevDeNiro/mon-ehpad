@@ -9,7 +9,7 @@ use App\Core\Domain\Model\ValueObject\OneTimePassword;
 use App\Core\Domain\Model\ValueObject\Target;
 use Cake\Chronos\Chronos;
 
-final readonly class PendingOneTimePassword
+readonly class PendingOneTimePassword
 {
     public function __construct(
         private Id $id,
@@ -42,14 +42,5 @@ final readonly class PendingOneTimePassword
     public function getExpiresAt(): Chronos
     {
         return $this->expiresAt;
-    }
-
-    public function isForTarget(object $entity, Id $id): bool
-    {
-        if ($this->target->entity() !== $entity::class) {
-            return false;
-        }
-
-        return $this->target->id()->equals($id);
     }
 }

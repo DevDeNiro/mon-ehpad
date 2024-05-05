@@ -12,6 +12,7 @@ use App\Core\Domain\Model\ValueObject\Target;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Event\UserRegistered;
+use App\Security\Domain\Model\Exception\UserException;
 use Cake\Chronos\Chronos;
 
 final readonly class Handler implements CoreHandler
@@ -24,7 +25,11 @@ final readonly class Handler implements CoreHandler
 
     public function __invoke(UserRegistered $userRegistered): void
     {
-        $user = $this->userRepository->findById($userRegistered->getId());
+        $user = $this->userRepository->findOneById($userRegistered->getId());
+
+        if (null === $user) {
+            throw UserException::idNotFound($userRegistered->getId());
+        }
 
         $pendingOneTimePassword = new PendingOneTimePassword(
             new Id(),

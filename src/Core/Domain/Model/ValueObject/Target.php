@@ -45,4 +45,13 @@ final readonly class Target
     {
         return $this->id;
     }
+
+    public function isFor(object $entity, Id $id): bool
+    {
+        if ($this->entity !== $entity::class) {
+            return false;
+        }
+
+        return $this->id->equals($id);
+    }
 }

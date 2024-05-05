@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Security;
 
 use App\Security\Domain\Application\Repository\UserRepository;
+use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Event\UserRegistered;
 use App\Security\Domain\Model\ValueObject\Email;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -31,10 +32,10 @@ final class SignUpTest extends ApiTestCase
         self::assertMatchesOpenApiResponse();
         self::assertResponseHeaderSame('location', '/welcome');
 
-        /** @var UserRepository $userRepository */
-        $userRepository = self::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findByEmail(Email::fromString('user@email.com'));
+        $userRepository = $this->getService(UserRepository::class);
+        $user = $userRepository->findOneByEmail(Email::fromString('user@email.com'));
 
+        self::assertInstanceOf(User::class, $user);
         self::assertEventDispatched(new UserRegistered($user->getId()));
     }
 

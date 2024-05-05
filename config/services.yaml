@@ -20,3 +20,17 @@ services:
 
   app.security.user_provider:
     class: App\Security\Infrastructure\Symfony\Security\UserProvider
+
+  App\Core\Infrastructure\Alice\Locator\OrderedFixturesLocator:
+    arguments:
+      - '@hautelook_alice.locator.environmentless'
+
+  hautelook_alice.locator: '@App\Core\Infrastructure\Alice\Locator\OrderedFixturesLocator'
+
+  core.alice.factories.pending_one_time_password:
+    class: App\Core\Infrastructure\Alice\Factory\PendingOneTimePasswordFactory
+    public: true
+
+  security.alice.factories.user:
+    class: App\Security\Infrastructure\Alice\Factory\UserFactory
+    public: true

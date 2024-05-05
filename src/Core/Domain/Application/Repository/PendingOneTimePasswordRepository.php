@@ -6,9 +6,11 @@ namespace App\Core\Domain\Application\Repository;
 
 use App\Core\Domain\Model\Entity\PendingOneTimePassword;
 use App\Core\Domain\Model\Exception\OneTimePasswordException;
-use App\Core\Domain\Model\ValueObject\Id;
 use App\Core\Domain\Model\ValueObject\OneTimePassword;
 
+/**
+ * @method PendingOneTimePassword|null findOneByOneTimePassword(OneTimePassword $oneTimePassword)
+ */
 interface PendingOneTimePasswordRepository
 {
     /**
@@ -18,13 +20,5 @@ interface PendingOneTimePasswordRepository
 
     public function insert(PendingOneTimePassword $pendingOneTimePassword): void;
 
-    /**
-     * @throws OneTimePasswordException
-     */
     public function remove(PendingOneTimePassword $pendingOneTimePassword): void;
-
-    /**
-     * @throws OneTimePasswordException
-     */
-    public function findByOneTimePassword(OneTimePassword $oneTimePassword): PendingOneTimePassword;
 }

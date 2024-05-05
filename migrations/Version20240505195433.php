@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240505153737 extends AbstractMigration
+final class Version20240505195433 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,13 +20,18 @@ final class Version20240505153737 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE pending_one_time_password (id UUID NOT NULL, one_time_password VARCHAR(6) NOT NULL, expires_at TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL, target JSON NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_E0711D30FB5E29D2 ON pending_one_time_password (one_time_password)');
-        $this->addSql('COMMENT ON COLUMN pending_one_time_password.id IS \'(DC2Type:ulid)\'');
-        $this->addSql('COMMENT ON COLUMN pending_one_time_password.expires_at IS \'(DC2Type:chronos)\'');
-        $this->addSql('COMMENT ON COLUMN pending_one_time_password.target IS \'(DC2Type:target)\'');
-        $this->addSql('CREATE TABLE "user" (id UUID NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, status VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('COMMENT ON COLUMN "user".id IS \'(DC2Type:ulid)\'');
+        $this->addSql('CREATE TABLE core_pending_one_time_password (id UUID NOT NULL, one_time_password VARCHAR(255) NOT NULL, expires_at TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL, target JSON NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE UNIQUE INDEX one_time_password_idx ON core_pending_one_time_password (one_time_password)');
+        $this->addSql('COMMENT ON COLUMN core_pending_one_time_password.id IS \'(DC2Type:id)\'');
+        $this->addSql('COMMENT ON COLUMN core_pending_one_time_password.one_time_password IS \'(DC2Type:one_time_password)\'');
+        $this->addSql('COMMENT ON COLUMN core_pending_one_time_password.expires_at IS \'(DC2Type:chronos)\'');
+        $this->addSql('COMMENT ON COLUMN core_pending_one_time_password.target IS \'(DC2Type:target)\'');
+        $this->addSql('CREATE TABLE security_user (id UUID NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(60) NOT NULL, status security_status NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE UNIQUE INDEX email ON security_user (email)');
+        $this->addSql('COMMENT ON COLUMN security_user.id IS \'(DC2Type:id)\'');
+        $this->addSql('COMMENT ON COLUMN security_user.email IS \'(DC2Type:email)\'');
+        $this->addSql('COMMENT ON COLUMN security_user.password IS \'(DC2Type:password)\'');
+        $this->addSql('COMMENT ON COLUMN security_user.status IS \'(DC2Type:status)\'');
         $this->addSql('CREATE TABLE messenger_messages (id BIGSERIAL NOT NULL, body TEXT NOT NULL, headers TEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, available_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, delivered_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_75EA56E0FB7336F0 ON messenger_messages (queue_name)');
         $this->addSql('CREATE INDEX IDX_75EA56E0E3BD61CE ON messenger_messages (available_at)');
@@ -48,8 +53,8 @@ final class Version20240505153737 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('DROP TABLE pending_one_time_password');
-        $this->addSql('DROP TABLE "user"');
+        $this->addSql('DROP TABLE core_pending_one_time_password');
+        $this->addSql('DROP TABLE security_user');
         $this->addSql('DROP TABLE messenger_messages');
     }
 }

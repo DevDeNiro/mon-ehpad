@@ -10,7 +10,7 @@ use App\Core\Domain\Model\ValueObject\OneTimePassword;
 
 final class OneTimePasswordException extends DomainException
 {
-    public static function pendingOneTimePasswordNotFound(Id $id): self
+    public static function idNotFound(Id $id): self
     {
         return new self(
             sprintf(
@@ -21,7 +21,7 @@ final class OneTimePasswordException extends DomainException
         );
     }
 
-    public static function pendingOneTimePasswordNotFoundByOneTimePassword(OneTimePassword $oneTimePassword): self
+    public static function oneTimePasswordNotFound(OneTimePassword $oneTimePassword): self
     {
         return new self(
             sprintf(

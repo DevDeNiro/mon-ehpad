@@ -10,7 +10,7 @@ use App\Security\Domain\Model\Exception\UserException;
 use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\Password;
 
-final class User
+class User
 {
     public function __construct(
         private readonly Id $id,

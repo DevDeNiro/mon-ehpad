@@ -39,7 +39,7 @@ final class FakeUserRepository implements UserRepository
         return isset($this->users[(string) $email]);
     }
 
-    public function findByEmail(Email $email): User
+    public function findOneByEmail(Email $email): User
     {
         if (! isset($this->users[$email->value()])) {
             throw UserException::emailNotFound($email);
@@ -48,12 +48,7 @@ final class FakeUserRepository implements UserRepository
         return $this->users[$email->value()];
     }
 
-    public function save(User $user): void
-    {
-        $this->users[$user->getEmail()->value()] = $user;
-    }
-
-    public function findById(Id $id): User
+    public function findOneById(Id $id): User
     {
         foreach ($this->users as $user) {
             if ($user->getId()->equals($id)) {

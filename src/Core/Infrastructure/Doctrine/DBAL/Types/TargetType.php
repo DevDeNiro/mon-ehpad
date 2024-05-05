@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Infrastructure\Doctrine\Type;
+namespace App\Core\Infrastructure\Doctrine\DBAL\Types;
 
 use App\Core\Domain\Model\ValueObject\Target;
-use Cake\Chronos\Chronos;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\JsonType;
-use Doctrine\DBAL\Types\Type;
 
 final class TargetType extends JsonType
 {

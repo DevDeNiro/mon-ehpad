@@ -10,9 +10,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final readonly class SymfonyUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public function __construct(
-        private User $user
-    ) {
+    public function __construct(private User $user)
+    {
     }
 
     public function user(): User

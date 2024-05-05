@@ -38,15 +38,15 @@ final class FakePendingOneTimePasswordRepository implements PendingOneTimePasswo
     public function remove(PendingOneTimePassword $pendingOneTimePassword): void
     {
         if (!isset($this->pendingOneTimePasswords[$pendingOneTimePassword->getOneTimePassword()->value()])) {
-            throw OneTimePasswordException::pendingOneTimePasswordNotFound($pendingOneTimePassword->getId());
+            throw OneTimePasswordException::idNotFound($pendingOneTimePassword->getId());
         }
         unset($this->pendingOneTimePasswords[$pendingOneTimePassword->getOneTimePassword()->value()]);
     }
 
-    public function findByOneTimePassword(OneTimePassword $oneTimePassword): PendingOneTimePassword
+    public function findOneByOneTimePassword(OneTimePassword $oneTimePassword): PendingOneTimePassword
     {
         if (!isset($this->pendingOneTimePasswords[$oneTimePassword->value()])) {
-            throw OneTimePasswordException::pendingOneTimePasswordNotFoundByOneTimePassword($oneTimePassword);
+            throw OneTimePasswordException::oneTimePasswordNotFound($oneTimePassword);
         }
 
         return $this->pendingOneTimePasswords[$oneTimePassword->value()];

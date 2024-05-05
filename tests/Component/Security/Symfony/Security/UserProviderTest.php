@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Component\Security\Symfony\Security;
 
 use App\Security\Domain\Application\Repository\UserRepository;
+use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Infrastructure\Symfony\Security\SymfonyUser;
 use App\Security\Infrastructure\Symfony\Security\UserProvider;
@@ -39,7 +40,8 @@ final class UserProviderTest extends KernelTestCase
     #[Test]
     public function shouldRefreshUser(): void
     {
-        $user = $this->userRepository->findByEmail(Email::fromString('admin+1@email.com'));
+        $user = $this->userRepository->findOneByEmail(Email::fromString('admin+1@email.com'));
+        self::assertNotNull($user);
         $symfonyUser = $this->userProvider->refreshUser(new SymfonyUser($user));
         self::assertEquals($symfonyUser->getUserIdentifier(), 'admin+1@email.com');
     }

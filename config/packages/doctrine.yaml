@@ -4,8 +4,15 @@ doctrine:
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
         types:
-            chronos: App\Core\Infrastructure\Doctrine\Type\ChronosType
-            target: App\Core\Infrastructure\Doctrine\Type\TargetType
+            id: App\Core\Infrastructure\Doctrine\DBAL\Types\IdType
+            one_time_password: App\Core\Infrastructure\Doctrine\DBAL\Types\OneTimePasswordType
+            chronos: App\Core\Infrastructure\Doctrine\DBAL\Types\ChronosType
+            target: App\Core\Infrastructure\Doctrine\DBAL\Types\TargetType
+            email: App\Security\Infrastructure\Doctrine\DBAL\Types\EmailType
+            password: App\Security\Infrastructure\Doctrine\DBAL\Types\PasswordType
+            status: App\Security\Infrastructure\Doctrine\DBAL\Types\StatusType
+        mapping_types:
+            enum: string
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
@@ -17,20 +24,19 @@ doctrine:
             auto_mapping: true
         mappings:
             Core:
-                type: attribute
+                type: xml
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Core/Infrastructure/Doctrine/Entity'
-                prefix: 'App\Core\Infrastructure\Doctrine\Entity'
+                dir: '%kernel.project_dir%/src/Core/Infrastructure/Doctrine/ORM/Mapping'
+                prefix: 'App\Core\Domain\Model\Entity'
             Security:
-                type: attribute
+                type: xml
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Security/Infrastructure/Doctrine/Entity'
-                prefix: 'App\Security\Infrastructure\Doctrine\Entity'
+                dir: '%kernel.project_dir%/src/Security/Infrastructure/Doctrine/ORM/Mapping'
+                prefix: 'App\Security\Domain\Model\Entity'
 
 when@test:
     doctrine:
         dbal:
-            # "TEST_TOKEN" is typically set by ParaTest
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
 
 when@prod:

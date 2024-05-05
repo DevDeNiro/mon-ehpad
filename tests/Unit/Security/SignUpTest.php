@@ -50,7 +50,7 @@ final class SignUpTest extends UseCaseTestCase
 
         $this->handle($newUser);
 
-        $user = $this->fakeUserRepository->findByEmail(Email::fromString($newUser->email));
+        $user = $this->fakeUserRepository->findOneByEmail(Email::fromString($newUser->email));
 
         self::assertSame('hashed_password', $user->getPassword()->value());
         self::assertEventDispatched(new UserRegistered($user->getId()));

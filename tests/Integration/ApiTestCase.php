@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Integration;
 
 use App\Core\Domain\Application\CQRS\EventBus;
+use App\Core\Domain\Validation\Assert;
 use Safe\Exceptions\JsonException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\AbstractBrowser;
@@ -55,5 +56,18 @@ abstract class ApiTestCase extends WebTestCase
         $response = $client->getResponse();
 
         return $response;
+    }
+
+    /**
+     * @template T of object
+     * @param class-string<T> $id
+     * @return T
+     */
+    public function getService(string $id): object
+    {
+        /** @var T $service */
+        $service = self::getContainer()->get($id);
+
+        return $service;
     }
 }

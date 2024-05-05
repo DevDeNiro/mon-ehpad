@@ -1,0 +1,5 @@
+App\Security\Domain\Model\Entity\User:
+  user_{1..10}:
+    __factory: { '@security.alice.factories.user::create': ['<current()>', 'waiting_for_confirmation'] }
+  user_{11..100}:
+    __factory: { '@security.alice.factories.user::create': ['<current()>', 'active'] }
