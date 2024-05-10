@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Security\Domain\Validation\Validator;
 
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Application\Repository\UserRepository;
-use App\Security\Domain\Model\ValueObject\Email;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 

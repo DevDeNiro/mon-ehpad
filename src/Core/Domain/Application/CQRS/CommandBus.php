@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Domain\Application\CQRS;
 
-use App\Core\Domain\UseCase\Command;
+use App\Core\Domain\Application\CQRS\Message\Command;
 
 interface CommandBus
 {

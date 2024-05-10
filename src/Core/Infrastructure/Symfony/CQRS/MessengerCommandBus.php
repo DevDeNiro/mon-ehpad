@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Infrastructure\Symfony\CQRS;
 
-use App\Core\Domain\UseCase\Command;
 use App\Core\Domain\Application\CQRS\CommandBus;
+use App\Core\Domain\Application\CQRS\Message\Command;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 

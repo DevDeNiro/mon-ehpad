@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Component\Hasher;
 
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Domain\Model\ValueObject\Id;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Enum\Status;
-use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\PlainPassword;
-use App\Security\Infrastructure\Application\Hasher\DefaultPasswordHasher;
+use App\Security\Infrastructure\Symfony\Hasher\DefaultPasswordHasher;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

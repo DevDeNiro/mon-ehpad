@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Doctrine\DBAL\Types;
 
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Infrastructure\Doctrine\DBAL\Types\TextType;
-use App\Security\Domain\Model\ValueObject\Email;
 
 final class EmailType extends TextType
 {

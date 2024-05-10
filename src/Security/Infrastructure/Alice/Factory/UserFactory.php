@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Alice\Factory;
 
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Infrastructure\Alice\Factory\IdFactory;
 use App\Security\Domain\Application\Hasher\PasswordHasher;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Enum\Status;
-use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\PlainPassword;
 
 final readonly class UserFactory

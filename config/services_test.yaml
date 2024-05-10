@@ -4,10 +4,16 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
-
   _instanceof:
-    App\Core\Domain\UseCase\Handler:
-      tags: ['messenger.message_handler']
+    App\Core\Domain\Application\CQRS\Handler\CommandHandler:
+      tags:
+        - { name: messenger.message_handler, bus: command.bus }
+    App\Core\Domain\Application\CQRS\Handler\QueryHandler:
+      tags:
+        - { name: messenger.message_handler, bus: query.bus }
+    App\Core\Domain\Application\CQRS\Handler\EventHandler:
+      tags:
+        - { name: messenger.message_handler, bus: event.bus }
 
   App\:
     resource: '../src/'
@@ -42,5 +48,4 @@ services:
       - '../tests/Fixtures/*/Domain/UseCase/**/Input.php'
       - '../tests/Fixtures/*/Domain/UseCase/**/Output.php'
       - '../tests/Fixtures/*/Infrastructure/Doctrine/Entity/'
-
-  App\Core\Domain\Application\CQRS\EventBus: '@Tests\Fixtures\Core\Infrastructure\Symfony\CQRS\FakeEventBus'
+      - '../tests/Fixtures/Core/Infrastructure/Symfony/FakeEventBus.php'

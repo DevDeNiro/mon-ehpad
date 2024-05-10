@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Security;
 
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Event\UserRegistered;
-use App\Security\Domain\Model\ValueObject\Email;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +36,7 @@ final class SignUpTest extends ApiTestCase
         $user = $userRepository->findOneByEmail(Email::fromString('user@email.com'));
 
         self::assertInstanceOf(User::class, $user);
-        self::assertEventDispatched(new UserRegistered($user->getId()));
+        self::assertEmailCount(1);
     }
 
     /**

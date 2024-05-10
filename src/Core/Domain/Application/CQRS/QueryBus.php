@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Domain\Application\CQRS;
 
-use App\Core\Domain\UseCase\Query;
+use App\Core\Domain\Application\CQRS\Message\Query;
 
 interface QueryBus
 {

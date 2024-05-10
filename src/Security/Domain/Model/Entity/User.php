@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Security\Domain\Model\Entity;
 
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Domain\Model\ValueObject\Id;
 use App\Security\Domain\Model\Enum\Status;
 use App\Security\Domain\Model\Exception\UserException;
-use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\Password;
 
 class User

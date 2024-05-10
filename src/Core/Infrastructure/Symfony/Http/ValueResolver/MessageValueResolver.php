@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Infrastructure\Symfony\Http\ValueResolver;
 
-use App\Core\Domain\UseCase\Command;
-use App\Core\Domain\UseCase\Query;
+use App\Core\Domain\Application\CQRS\Message\Command;
+use App\Core\Domain\Application\CQRS\Message\Query;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;

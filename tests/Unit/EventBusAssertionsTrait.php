@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests;
+namespace Tests\Unit;
 
-use App\Core\Domain\UseCase\Event;
+use App\Core\Domain\Application\CQRS\Message\Event;
 
 trait EventBusAssertionsTrait
 {

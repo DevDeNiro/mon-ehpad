@@ -17,14 +17,6 @@ abstract class ApiTestCase extends WebTestCase
 {
     use ApiAssertionsTrait;
 
-    public static function eventBus(): FakeEventBus
-    {
-        /** @var FakeEventBus $eventBus */
-        $eventBus = self::getContainer()->get(EventBus::class);
-
-        return $eventBus;
-    }
-
     /**
      * @param array<string, mixed> $body
      * @param array<string, mixed> $query

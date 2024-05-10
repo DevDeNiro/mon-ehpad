@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Infrastructure\Symfony\CQRS;
 
-use App\Core\Domain\UseCase\Query;
+use App\Core\Domain\Application\CQRS\Message\Query;
 use App\Core\Domain\Application\CQRS\QueryBus;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -15,9 +15,9 @@ final class MessengerQueryBus implements QueryBus
         handle as handleQuery;
     }
 
-    public function __construct(MessageBusInterface $messageBus)
+    public function __construct(MessageBusInterface $queryBus)
     {
-        $this->messageBus = $messageBus;
+        $this->messageBus = $queryBus;
     }
 
     public function fetch(Query $query): mixed

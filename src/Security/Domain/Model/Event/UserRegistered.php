@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace App\Security\Domain\Model\Event;
 
-use App\Core\Domain\UseCase\Event;
+use App\Core\Domain\Application\CQRS\Message\Event;
 use App\Core\Domain\Model\ValueObject\Id;
 
 final readonly class UserRegistered implements Event
 {
-    public function __construct(private Id $id)
+    private string $id;
+
+    public function __construct(Id $id)
     {
+        $this->id = (string) $id;
     }
 
     public function getId(): Id
     {
-        return $this->id;
+        return Id::fromString($this->id);
     }
 }

@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Security\Domain\Model\ValueObject;
+namespace App\Core\Domain\Model\ValueObject\Notification;
 
 use App\Core\Domain\Model\ValueObject\Text;
 use App\Core\Domain\Validation\Assert;
 
-final readonly class Email extends Text
+final readonly class Template extends Text
 {
-    public static function fromString(string $value): self
+    public static function fromString(string $value): Template
     {
         Assert::notEmpty($value);
-        Assert::email($value);
 
         return new self($value);
     }

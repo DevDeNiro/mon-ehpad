@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace App\Security\Domain\UseCase\SignUp;
 
 use App\Core\Domain\Application\CQRS\EventBus;
+use App\Core\Domain\Application\CQRS\Handler\CommandHandler;
 use App\Core\Domain\Model\ValueObject\Id;
-use App\Core\Domain\UseCase\Handler as CoreHandler;
 use App\Security\Domain\Application\Hasher\PasswordHasher;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Enum\Status;
 use App\Security\Domain\Model\Event\UserRegistered;
-use App\Security\Domain\Model\ValueObject\Email;
-use App\Security\Domain\Model\ValueObject\PlainPassword;
 
-final readonly class Handler implements CoreHandler
+final readonly class Handler implements CommandHandler
 {
     public function __construct(
         private UserRepository $userRepository,

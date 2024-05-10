@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Security\Domain\UseCase\SignUp;
 
-use App\Core\Domain\UseCase\Command;
-use App\Security\Domain\Model\ValueObject\Email;
+use App\Core\Domain\Application\CQRS\Message\Command;
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\PlainPassword;
 use App\Security\Domain\Validation\Validator\UniqueEmail;
 use Symfony\Component\Validator\Constraints as Assert;

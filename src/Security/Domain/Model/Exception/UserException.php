@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Security\Domain\Model\Exception;
 
 use App\Core\Domain\Model\Exception\DomainException;
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Domain\Model\ValueObject\Id;
 use App\Security\Domain\Model\Entity\User;
-use App\Security\Domain\Model\ValueObject\Email;
 
 final class UserException extends DomainException
 {

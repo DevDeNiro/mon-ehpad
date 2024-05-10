@@ -1,0 +1,10 @@
+mjml:
+  renderer: 'binary'
+  options:
+    binary: '%env(MJML_BINARY)%'
+    minify: false
+
+when@prod:
+  mjml:
+    options:
+      minify: true

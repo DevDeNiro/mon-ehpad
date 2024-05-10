@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Component\Security\Doctrine\Repository;
 
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Domain\Model\ValueObject\Id;
-use App\Core\Infrastructure\Alice\Factory\IdFactory;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Enum\Status;
-use App\Security\Domain\Model\Exception\UserException;
-use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\Password;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

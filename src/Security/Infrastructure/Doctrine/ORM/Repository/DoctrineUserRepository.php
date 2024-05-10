@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Doctrine\ORM\Repository;
 
-use App\Core\Domain\Model\ValueObject\Id;
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
-use App\Security\Domain\Model\Exception\UserException;
-use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Infrastructure\Doctrine\Entity\DoctrineUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

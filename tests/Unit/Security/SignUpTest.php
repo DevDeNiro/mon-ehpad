@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Security;
 
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\Event\UserRegistered;
-use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\UseCase\SignUp\Handler;
 use App\Security\Domain\UseCase\SignUp\Input;
 use App\Security\Domain\Validation\Validator\UniqueEmailValidator;
@@ -19,8 +19,6 @@ use Tests\Unit\UseCaseTestCase;
 
 final class SignUpTest extends UseCaseTestCase
 {
-    use FakerTrait;
-
     private FakeUserRepository $fakeUserRepository;
 
     protected function setUp(): void

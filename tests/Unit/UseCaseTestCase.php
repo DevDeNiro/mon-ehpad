@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Core\Domain\UseCase\Command;
-use App\Core\Domain\UseCase\Event;
-use App\Core\Domain\UseCase\Handler;
-use App\Core\Domain\UseCase\Query;
+use App\Core\Domain\Application\CQRS\Handler\CommandHandler;
+use App\Core\Domain\Application\CQRS\Handler\QueryHandler;
+use App\Core\Domain\Application\CQRS\Message\Command;
+use App\Core\Domain\Application\CQRS\Message\Event;
+use App\Core\Domain\Application\CQRS\Message\Query;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
@@ -15,14 +16,15 @@ use Symfony\Component\Validator\ContainerConstraintValidatorFactory;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Tests\FakerTrait;
 use Tests\Fixtures\Core\Infrastructure\Symfony\CQRS\FakeEventBus;
 use Tests\Fixtures\Core\Infrastructure\Symfony\DependencyInjection\ValidatorContainer;
 
 abstract class UseCaseTestCase extends TestCase
 {
-    use UseCaseAssertionsTrait;
+    use UseCaseAssertionsTrait, EventBusAssertionsTrait, FakerTrait;
 
-    protected ?Handler $useCase = null;
+    protected null|QueryHandler|CommandHandler $useCase = null;
 
     private static ?ValidatorInterface $validator = null;
 
@@ -52,7 +54,7 @@ abstract class UseCaseTestCase extends TestCase
         return $this;
     }
 
-    protected function setUseCase(Handler $handler): void
+    protected function setUseCase(QueryHandler|CommandHandler $handler): void
     {
         $this->useCase = $handler;
     }
@@ -64,11 +66,11 @@ abstract class UseCaseTestCase extends TestCase
 
     protected function handle(Command|Query|Event $input): mixed
     {
-        if (! $this->useCase instanceof Handler) {
+        if (!$this->useCase instanceof QueryHandler && !$this->useCase instanceof CommandHandler) {
             throw new \RuntimeException('Setup use case before execute it.');
         }
 
-        if (! method_exists($this->useCase, '__invoke')) {
+        if (!method_exists($this->useCase, '__invoke')) {
             throw new \RuntimeException('Use case must have __invoke method.');
         }
 

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Security\Domain\UseCase\ConfirmRegistration;
 
+use App\Core\Domain\Application\CQRS\Handler\CommandHandler;
 use App\Core\Domain\Application\Repository\PendingOneTimePasswordRepository;
 use App\Core\Domain\Model\Exception\OneTimePasswordException;
-use App\Core\Domain\UseCase\Handler as CoreHandler;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Application\Security\LoginProgrammatically;
 use App\Security\Domain\Model\Exception\UserException;
 
-final readonly class Handler implements CoreHandler
+final readonly class Handler implements CommandHandler
 {
     public function __construct(
         private UserRepository $userRepository,

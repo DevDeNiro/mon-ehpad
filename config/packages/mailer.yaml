@@ -1,3 +1,8 @@
 framework:
-    mailer:
-        dsn: '%env(MAILER_DSN)%'
+  mailer:
+    transports:
+      main: "%env(MAILER_DSN)%"
+    envelope:
+      sender: 'notifications@mon-ehpad.fr'
+    headers:
+      From: 'Mon EHPAD <notifications@mon-ehpad.fr>'

@@ -6,13 +6,13 @@ namespace Tests\Unit\Security;
 
 use App\Core\Domain\Model\Entity\PendingOneTimePassword;
 use App\Core\Domain\Model\Exception\OneTimePasswordException;
+use App\Core\Domain\Model\ValueObject\Email;
 use App\Core\Domain\Model\ValueObject\Id;
 use App\Core\Domain\Model\ValueObject\OneTimePassword;
 use App\Core\Domain\Model\ValueObject\Target;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Enum\Status;
 use App\Security\Domain\Model\Exception\UserException;
-use App\Security\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Model\ValueObject\Password;
 use App\Security\Domain\UseCase\ConfirmRegistration\Handler;
 use App\Security\Domain\UseCase\ConfirmRegistration\Input;
