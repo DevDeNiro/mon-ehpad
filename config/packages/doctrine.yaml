@@ -4,12 +4,7 @@ doctrine:
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
         types:
-            id: App\Core\Infrastructure\Doctrine\DBAL\Types\IdType
-            one_time_password: App\Core\Infrastructure\Doctrine\DBAL\Types\OneTimePasswordType
             chronos: App\Core\Infrastructure\Doctrine\DBAL\Types\ChronosType
-            target: App\Core\Infrastructure\Doctrine\DBAL\Types\TargetType
-            email: App\Security\Infrastructure\Doctrine\DBAL\Types\EmailType
-            password: App\Security\Infrastructure\Doctrine\DBAL\Types\PasswordType
             status: App\Security\Infrastructure\Doctrine\DBAL\Types\StatusType
         mapping_types:
             enum: string
@@ -23,11 +18,6 @@ doctrine:
         controller_resolver:
             auto_mapping: true
         mappings:
-            Core:
-                type: xml
-                is_bundle: false
-                dir: '%kernel.project_dir%/src/Core/Infrastructure/Doctrine/ORM/Mapping'
-                prefix: 'App\Core\Domain\Model\Entity'
             Security:
                 type: xml
                 is_bundle: false

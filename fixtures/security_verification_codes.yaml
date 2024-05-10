@@ -1,0 +1,3 @@
+App\Security\Domain\Model\Entity\VerificationCode:
+  verification_code_{1..100}:
+    __factory: { create: ['<otp($current)>'] }

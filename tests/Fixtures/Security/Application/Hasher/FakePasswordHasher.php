@@ -6,18 +6,16 @@ namespace Tests\Fixtures\Security\Application\Hasher;
 
 use App\Security\Domain\Application\Hasher\PasswordHasher;
 use App\Security\Domain\Model\Entity\User;
-use App\Security\Domain\Model\ValueObject\Password;
-use App\Security\Domain\Model\ValueObject\PlainPassword;
 
 final readonly class FakePasswordHasher implements PasswordHasher
 {
-    public function hash(PlainPassword $plainPassword): Password
+    public function hash(string $plainPassword): string
     {
-        return Password::fromString('hashed_password');
+        return 'hashed_password';
     }
 
-    public function verify(PlainPassword $plainPassword, User $user): bool
+    public function verify(string $plainPassword, User $user): bool
     {
-        return $plainPassword->value() === $user->getPassword()->value();
+        return $plainPassword === $user->getPassword();
     }
 }

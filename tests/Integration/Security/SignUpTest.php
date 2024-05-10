@@ -11,6 +11,7 @@ use App\Security\Domain\Model\Event\UserRegistered;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Tests\FakerTrait;
 use Tests\Integration\ApiTestCase;
 
@@ -21,22 +22,23 @@ final class SignUpTest extends ApiTestCase
     #[Test]
     public function shouldSignUpSuccessfully(): void
     {
-        self::createClient();
-
         $this->post('/api/security/sign-up', [
             'email' => 'user@email.com',
             'password' => self::faker()->password(20),
         ]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertMatchesOpenApiResponse();
-        self::assertResponseHeaderSame('location', '/welcome');
 
         $userRepository = $this->getService(UserRepository::class);
-        $user = $userRepository->findOneByEmail(Email::fromString('user@email.com'));
+        $user = $userRepository->findOneByEmail('user@email.com');
 
         self::assertInstanceOf(User::class, $user);
         self::assertEmailCount(1);
+
+        $authorizationChecker = $this->getService(AuthorizationCheckerInterface::class);
+
+        self::assertTrue($authorizationChecker->isGranted('IS_AUTHENTICATED'));
     }
 
     /**
@@ -49,8 +51,6 @@ final class SignUpTest extends ApiTestCase
         string $password,
         array $expectedResponse
     ): void {
-        self::createClient();
-
         $this->post('/api/security/sign-up', [
             'email' => $email,
             'password' => $password,
@@ -114,8 +114,6 @@ final class SignUpTest extends ApiTestCase
     #[Test]
     public function shouldReturnBadRequest(): void
     {
-        self::createClient();
-
         $this->post('/api/security/sign-up', [
             'fail' => '',
             'wrong' => '',

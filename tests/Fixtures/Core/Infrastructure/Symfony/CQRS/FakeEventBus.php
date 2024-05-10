@@ -10,20 +10,12 @@ use App\Core\Domain\Application\CQRS\Message\Event;
 final class FakeEventBus implements EventBus
 {
     /**
-     * @var array<Event>
+     * @var Event[]
      */
-    private array $events = [];
+    public array $events = [];
 
     public function dispatch(Event $event): void
     {
         $this->events[] = $event;
-    }
-
-    /**
-     * @return array<Event>
-     */
-    public function events(): array
-    {
-        return $this->events;
     }
 }

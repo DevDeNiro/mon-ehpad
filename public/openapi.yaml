@@ -3,9 +3,6 @@ info:
   version: 1.0.0
   title: Mon EHPAD
   description: Mon EHPAD est une application web qui permet de gérer les résidents d'un EHPAD.
-  license:
-    identifier:
-    name: MIT
   contact:
     name: API Support
     url: https://github.com/TBoileau/mon-ehpad
@@ -16,32 +13,86 @@ servers:
 tags:
   - name: Security
 paths:
-  /api/security/confirm-registration:
+  /api/security/complete:
     post:
       tags:
         - Security
-      summary: Confirm Registration
-      description: Confirm registration of a new organization administrator
-      operationId: confirmRegistration
+      summary: Complete registration
+      description: Complete the registration of a new organization administrator
+      operationId: complete
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ConfirmRegistrationRequest'
+              $ref: '#/components/schemas/CompleteRequest'
       responses:
-        302:
-          description: Redirect to onboarding
-          headers:
-            Location:
-              schema:
-                type: string
+        204:
+          description: No content
         400:
           description: Bad request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+        422:
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntityResponse'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+  /api/security/verify-email:
+    post:
+      tags:
+        - Security
+      summary: Verify Email
+      description: Verify the email address of a new organization administrator
+      operationId: verifyEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailRequest'
+      responses:
+        204:
+          description: No content
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
         422:
           description: Unprocessable entity
           content:
@@ -68,12 +119,8 @@ paths:
             schema:
               $ref: '#/components/schemas/SignUpRequest'
       responses:
-        302:
-          description: Redirect to onboarding
-          headers:
-            Location:
-              schema:
-                type: string
+        204:
+          description: No content
         400:
           description: Bad request
           content:
@@ -112,6 +159,24 @@ components:
         - message
       example:
         message: Bad request
+    UnauthorizedResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+      example:
+        message: Unauthorized
+    ForbiddenResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+      example:
+        message: Forbidden
     UnprocessableEntityResponse:
       type: array
       items:
@@ -134,19 +199,33 @@ components:
         example:
             propertyPath: email
             message: This value is already used
-    ConfirmRegistrationRequest:
+    CompleteRequest:
       type: object
       properties:
-        email:
+        firstName:
           type: string
-        oneTimePassword:
+        lastName:
+          type: string
+        companyName:
+          type: string
+        phoneNumber:
           type: string
       required:
-        - email
-        - oneTimePassword
+        - code
+        - lastName
+        - companyName
+        - phoneNumber
       example:
-        email: user@email.com
-        oneTimePassword: 000001
+        code: 000001
+    VerifyEmailRequest:
+      type: object
+      properties:
+        code:
+          type: string
+      required:
+        - code
+      example:
+        code: 000001
     SignUpRequest:
       type: object
       properties:

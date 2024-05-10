@@ -6,7 +6,12 @@ namespace Tests\Integration;
 
 use App\Core\Domain\Application\CQRS\EventBus;
 use App\Core\Domain\Validation\Assert;
+use App\Security\Domain\Application\Repository\UserRepository;
+use App\Security\Domain\Model\Entity\User;
+use App\Security\Infrastructure\Symfony\Security\SymfonyUser;
+use Doctrine\ORM\EntityManagerInterface;
 use Safe\Exceptions\JsonException;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +22,26 @@ abstract class ApiTestCase extends WebTestCase
 {
     use ApiAssertionsTrait;
 
+    protected function setUp(): void
+    {
+        self::createClient();
+    }
+
+    protected function login(string $email = 'admin+1@email.com'): User
+    {
+        $userRepository = $this->getService(UserRepository::class);
+        $user = $userRepository->findOneByEmail($email);
+
+        Assert::notNull($user);
+
+        /** @var KernelBrowser $client */
+        $client = self::getClient();
+
+        $client->loginUser(new SymfonyUser($user));
+
+        return $user;
+    }
+
     /**
      * @param array<string, mixed> $body
      * @param array<string, mixed> $query
@@ -25,7 +50,7 @@ abstract class ApiTestCase extends WebTestCase
      */
     protected function post(string $url, array $body = [], ?array $query = null): Response
     {
-        /** @var AbstractBrowser $client */
+        /** @var KernelBrowser $client */
         $client = self::getClient();
 
         if ($query !== null) {
@@ -61,5 +86,13 @@ abstract class ApiTestCase extends WebTestCase
         $service = self::getContainer()->get($id);
 
         return $service;
+    }
+
+    public function refresh(object $entity): void
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+
+        $entityManager->refresh($entity);
     }
 }

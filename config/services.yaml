@@ -4,6 +4,7 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
+
   _instanceof:
     App\Core\Domain\Application\CQRS\Handler\CommandHandler:
       tags:
@@ -14,6 +15,10 @@ services:
     App\Core\Domain\Application\CQRS\Handler\EventHandler:
       tags:
         - { name: messenger.message_handler, bus: event.bus }
+    App\Core\Infrastructure\Alice\Provider\Provider:
+      tags:
+        - { name: nelmio_alice.faker.provider }
+
   App\:
     resource: '../src/'
     exclude:
@@ -23,19 +28,14 @@ services:
       - '../src/Core/Infrastructure/Symfony/Kernel.php'
       - '../src/*/Infrastructure/Doctrine/Entity/'
 
-  app.security.user_provider:
-    class: App\Security\Infrastructure\Symfony\Security\UserProvider
-
-  App\Core\Infrastructure\Alice\Locator\OrderedFixturesLocator:
+  App\Security\Infrastructure\Alice\Locator\OrderedFixturesLocator:
     arguments:
       - '@hautelook_alice.locator.environmentless'
 
-  hautelook_alice.locator: '@App\Core\Infrastructure\Alice\Locator\OrderedFixturesLocator'
+  hautelook_alice.locator: '@App\Security\Infrastructure\Alice\Locator\OrderedFixturesLocator'
 
-  core.alice.factories.pending_one_time_password:
-    class: App\Core\Infrastructure\Alice\Factory\PendingOneTimePasswordFactory
-    public: true
+  Faker\Generator:
+    factory: ['App\Core\Infrastructure\Faker\FakerFactory', 'create']
 
-  security.alice.factories.user:
-    class: App\Security\Infrastructure\Alice\Factory\UserFactory
-    public: true
+  app.security.user_provider:
+    class: App\Security\Infrastructure\Symfony\Security\UserProvider

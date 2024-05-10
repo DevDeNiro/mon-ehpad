@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Security\Domain\Validation\Validator;
 
-use App\Core\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Application\Repository\UserRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -17,15 +16,14 @@ final class UniqueEmailValidator extends ConstraintValidator
 
     public function validate(mixed $value, Constraint $constraint): void
     {
-        if (! $constraint instanceof UniqueEmail) {
+        if (
+            !$constraint instanceof UniqueEmail
+            || !is_string($value)
+        ) {
             return;
         }
 
-        if (! $value instanceof Email && ! is_string($value)) {
-            return;
-        }
-
-        if (! $this->userRepository->isAlreadyUsed((string) $value)) {
+        if (!$this->userRepository->isAlreadyUsed($value)) {
             return;
         }
 

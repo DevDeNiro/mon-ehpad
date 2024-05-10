@@ -14,14 +14,14 @@ final readonly class SymfonyUser implements UserInterface, PasswordAuthenticated
     {
     }
 
-    public function user(): User
+    public function getUser(): User
     {
         return $this->user;
     }
 
     public function getPassword(): string
     {
-        return $this->user->getPassword()->value();
+        return $this->user->getPassword();
     }
 
     public function getRoles(): array
@@ -35,6 +35,6 @@ final readonly class SymfonyUser implements UserInterface, PasswordAuthenticated
 
     public function getUserIdentifier(): string
     {
-        return $this->user->getEmail()->value();
+        return $this->user->getEmail();
     }
 }

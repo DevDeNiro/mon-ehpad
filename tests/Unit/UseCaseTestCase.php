@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Core\Domain\Application\CQRS\Handler\CommandHandler;
+use App\Core\Domain\Application\CQRS\Handler\EventHandler;
 use App\Core\Domain\Application\CQRS\Handler\QueryHandler;
 use App\Core\Domain\Application\CQRS\Message\Command;
 use App\Core\Domain\Application\CQRS\Message\Event;
 use App\Core\Domain\Application\CQRS\Message\Query;
+use App\Core\Domain\Validation\Assert;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
@@ -19,16 +21,24 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Tests\FakerTrait;
 use Tests\Fixtures\Core\Infrastructure\Symfony\CQRS\FakeEventBus;
 use Tests\Fixtures\Core\Infrastructure\Symfony\DependencyInjection\ValidatorContainer;
+use Tests\Fixtures\Core\Infrastructure\Symfony\Notifier\FakeEmailNotifier;
+use Tests\ReflectionTrait;
 
 abstract class UseCaseTestCase extends TestCase
 {
-    use UseCaseAssertionsTrait, EventBusAssertionsTrait, FakerTrait;
+    use UseCaseAssertionsTrait,
+        EventBusAssertionsTrait,
+        NotifierAssertionsTrait,
+        FakerTrait,
+        ReflectionTrait;
 
-    protected null|QueryHandler|CommandHandler $useCase = null;
+    protected null|QueryHandler|CommandHandler|EventHandler $useCase = null;
 
     private static ?ValidatorInterface $validator = null;
 
     private static ?FakeEventBus $fakeEventBus = null;
+
+    private static ?FakeEmailNotifier $fakeNotifier = null;
 
     public static function eventBus(): FakeEventBus
     {
@@ -37,6 +47,15 @@ abstract class UseCaseTestCase extends TestCase
         }
 
         return self::$fakeEventBus;
+    }
+
+    public static function notifier(): FakeEmailNotifier
+    {
+        if (! self::$fakeNotifier instanceof FakeEmailNotifier) {
+            self::$fakeNotifier = new FakeEmailNotifier();
+        }
+
+        return self::$fakeNotifier;
     }
 
     /**
@@ -54,7 +73,7 @@ abstract class UseCaseTestCase extends TestCase
         return $this;
     }
 
-    protected function setUseCase(QueryHandler|CommandHandler $handler): void
+    protected function setUseCase(QueryHandler|CommandHandler|EventHandler $handler): void
     {
         $this->useCase = $handler;
     }
@@ -66,7 +85,11 @@ abstract class UseCaseTestCase extends TestCase
 
     protected function handle(Command|Query|Event $input): mixed
     {
-        if (!$this->useCase instanceof QueryHandler && !$this->useCase instanceof CommandHandler) {
+        if (
+            !$this->useCase instanceof QueryHandler
+            && !$this->useCase instanceof CommandHandler
+            && !$this->useCase instanceof EventHandler
+        ) {
             throw new \RuntimeException('Setup use case before execute it.');
         }
 
@@ -103,9 +126,11 @@ abstract class UseCaseTestCase extends TestCase
 
     private function validate(Query|Command|Event $input): void
     {
-        if (! self::$validator instanceof ValidatorInterface) {
-            throw new \RuntimeException('Setup validator before use it.');
+        if (null === self::$validator) {
+            $this->setValidator([]);
         }
+
+        Assert::notNull(self::$validator);
 
         $constraintViolationList = self::$validator->validate($input);
 

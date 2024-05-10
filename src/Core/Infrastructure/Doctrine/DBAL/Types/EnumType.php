@@ -49,12 +49,13 @@ abstract class EnumType extends Type
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         $enum = $this->getEnum();
-        $cases = array_map(
-            static fn (\BackedEnum $item): string => "'{$item->value}'",
+
+        $values = array_map(
+            static fn (\BackedEnum $item): string => (string) $item->value,
             $enum::cases()
         );
 
-        return sprintf('ENUM(%s)', implode(', ', $cases));
+        return sprintf('VARCHAR(%d)', max(array_map('strlen', $values)));
     }
 
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool

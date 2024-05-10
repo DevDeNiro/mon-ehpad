@@ -22,9 +22,4 @@ final class StatusType extends EnumType
     {
         return Status::class;
     }
-
-    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
-    {
-        return 'security_status';
-    }
 }

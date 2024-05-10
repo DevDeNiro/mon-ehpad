@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Security\Doctrine\Repository;
 
-use App\Core\Domain\Model\ValueObject\Email;
-use App\Core\Domain\Model\ValueObject\Id;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
-use App\Security\Domain\Model\Enum\Status;
-use App\Security\Domain\Model\Exception\UserException;
-use App\Security\Domain\Model\ValueObject\Password;
+use App\Security\Domain\Model\Exception\InvalidStateException;
+use Symfony\Component\Uid\Ulid;
 
 final class FakeUserRepository implements UserRepository
 {
@@ -21,34 +18,25 @@ final class FakeUserRepository implements UserRepository
 
     public function __construct()
     {
-        $this->users['admin+1@email.com'] = new User(
-            new Id(),
-            Email::fromString('admin+1@email.com'),
-            Password::fromString('hashed_password'),
-            Status::WaitingForConfirmation
-        );
+        $this->users['admin+1@email.com'] = User::register('admin+1@email.com', 'hashed_password');
     }
 
     public function insert(User $user): void
     {
-        $this->users[$user->getEmail()->value()] = $user;
+        $this->users[$user->getEmail()] = $user;
     }
 
-    public function isAlreadyUsed(Email|string $email): bool
+    public function isAlreadyUsed(string $email): bool
     {
-        return isset($this->users[(string) $email]);
+        return isset($this->users[$email]);
     }
 
-    public function findOneByEmail(Email $email): User
+    public function findOneByEmail(string $email): ?User
     {
-        if (! isset($this->users[$email->value()])) {
-            throw UserException::emailNotFound($email);
-        }
-
-        return $this->users[$email->value()];
+        return $this->users[$email] ?? null;
     }
 
-    public function findOneById(Id $id): User
+    public function findOneById(Ulid $id): ?User
     {
         foreach ($this->users as $user) {
             if ($user->getId()->equals($id)) {
@@ -56,6 +44,6 @@ final class FakeUserRepository implements UserRepository
             }
         }
 
-        throw UserException::idNotFound($id);
+        return null;
     }
 }

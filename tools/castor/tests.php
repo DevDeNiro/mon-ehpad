@@ -12,7 +12,6 @@ function tests(#[AsOption] bool $noCoverage = false): void
 {
     io()->title('Run all tests');
     unitTests($noCoverage);
-    componentTests($noCoverage);
     integrationTests($noCoverage);
 }
 
@@ -21,15 +20,6 @@ function unitTests(#[AsOption] bool $noCoverage = false): void
 {
     io()->title('Run unit tests');
     run('php bin/phpunit --testdox --testsuite=unit -c tools/phpunit.xml', [
-        'XDEBUG_MODE' => $noCoverage ? 'off' : 'coverage',
-    ]);
-}
-
-#[AsTask(aliases: ['component'], name: 'component', description: 'Run component tests')]
-function componentTests(#[AsOption] bool $noCoverage = false): void
-{
-    io()->title('Run component tests');
-    run('php bin/phpunit --testdox --testsuite=component -c tools/phpunit.xml', [
         'XDEBUG_MODE' => $noCoverage ? 'off' : 'coverage',
     ]);
 }

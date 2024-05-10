@@ -18,14 +18,10 @@ final class MimeFactory
     {
         Assert::notNull($notification->getTemplate());
 
-        $recipient = $notification->getRecipient();
-
-        Assert::isInstanceOf($recipient, EmailRecipient::class);
-
         return (new NotificationEmail())
-            ->to(new Address((string) $recipient->getEmail(), (string) $recipient->getName()))
-            ->subject((string) $notification->getSubject())
-            ->htmlTemplate((string) $notification->getTemplate())
-            ->context($notification->getContext()->toArray());
+            ->to($notification->getRecipient())
+            ->subject($notification->getSubject())
+            ->htmlTemplate($notification->getTemplate())
+            ->context($notification->getContext());
     }
 }

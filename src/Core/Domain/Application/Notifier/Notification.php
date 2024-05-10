@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace App\Core\Domain\Application\Notifier;
 
-use App\Core\Domain\Model\ValueObject\Notification\Content;
-use App\Core\Domain\Model\ValueObject\Notification\Context;
-use App\Core\Domain\Model\ValueObject\Notification\Subject;
-use App\Core\Domain\Model\ValueObject\Notification\Template;
-
 interface Notification
 {
-    public function getSubject(): Subject;
+    public function getSubject(): string;
 
-    public function getRecipient(): Recipient;
+    public function getRecipient(): string;
 
-    public function getContext(): Context;
+    /**
+     * @return array<string, mixed>
+     */
+    public function getContext(): array;
 
-    public function getContent(): ?Content;
+    public function getContent(): ?string;
 
-    public function getTemplate(): ?Template;
+    public function getTemplate(): ?string;
 }

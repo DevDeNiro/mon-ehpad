@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Core\Domain\Model\Exception;
 
+/**
+ * @template T of array<string, mixed>
+ */
 abstract class DomainException extends \DomainException
 {
     /**
-     * @param array<string, mixed> $context
+     * @param T $context
      */
     protected function __construct(string $message = "", private readonly array $context = [])
     {
@@ -15,10 +18,15 @@ abstract class DomainException extends \DomainException
     }
 
     /**
-     * @return array<string, mixed>
+     * @param string|null $key
+     * @return ($key is null ? T : mixed)
      */
-    public function getContext(): array
+    public function getContext(?string $key = null): mixed
     {
+        if (null !== $key) {
+            return $this->context[$key];
+        }
+
         return $this->context;
     }
 }

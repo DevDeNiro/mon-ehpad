@@ -4,9 +4,14 @@
         <unique-constraints>
             <unique-constraint columns="email" name="email"/>
         </unique-constraints>
-        <id name="id" type="id" column="id"/>
-        <field name="email" column="email" type="email" unique="true"/>
-        <field name="password" column="password" type="password"/>
+        <id name="id" type="ulid" column="id"/>
+        <field name="email" column="email" unique="true"/>
+        <field name="password" column="password" length="60"/>
         <field name="status" column="status" type="status"/>
+        <field name="firstName" column="first_name" nullable="true"/>
+        <field name="lastName" column="last_name" nullable="true"/>
+        <field name="phoneNumber" column="phone_number" nullable="true"/>
+        <many-to-one field="company" target-entity="App\Security\Domain\Model\Entity\Company"/>
+        <one-to-one field="verificationCode" target-entity="App\Security\Domain\Model\Entity\VerificationCode"/>
     </entity>
 </doctrine-mapping>

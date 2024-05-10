@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Doctrine\ORM\Repository;
 
-use App\Core\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
-use App\Security\Infrastructure\Doctrine\Entity\DoctrineUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,12 +19,12 @@ final class DoctrineUserRepository extends ServiceEntityRepository implements Us
         parent::__construct($managerRegistry, User::class);
     }
 
-    public function isAlreadyUsed(Email|string $email): bool
+    public function isAlreadyUsed(string $email): bool
     {
         return $this->createQueryBuilder('u')
             ->select('COUNT(u.id)')
             ->where('u.email = :email')
-            ->setParameter('email', (string) $email)
+            ->setParameter('email', $email)
             ->getQuery()
             ->getSingleScalarResult() > 0;
     }
@@ -34,11 +32,5 @@ final class DoctrineUserRepository extends ServiceEntityRepository implements Us
     public function insert(User $user): void
     {
         $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
-    }
-
-    public function save(User $user): void
-    {
-        $this->getEntityManager()->flush();
     }
 }

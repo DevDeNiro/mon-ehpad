@@ -16,7 +16,7 @@ trait UseCaseAssertionsTrait
     /**
      * @param array<array{propertyPath: string, message: string}> $expectedViolations
      */
-    public function expectedViolations(array $expectedViolations): void
+    public function expectViolations(array $expectedViolations): void
     {
         $this->expectException(ValidationFailedException::class);
         $this->expectedViolations = $expectedViolations;

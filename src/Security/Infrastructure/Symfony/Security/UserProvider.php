@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Security\Infrastructure\Symfony\Security;
 
-use App\Core\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Application\Repository\UserRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -22,7 +21,7 @@ final readonly class UserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user): SymfonyUser
     {
-        if (! $user instanceof SymfonyUser) {
+        if (!$user instanceof SymfonyUser) {
             throw new UnsupportedUserException();
         }
 
@@ -36,7 +35,7 @@ final readonly class UserProvider implements UserProviderInterface
 
     public function loadUserByIdentifier(string $identifier): SymfonyUser
     {
-        $user = $this->userRepository->findOneByEmail(Email::fromString($identifier));
+        $user = $this->userRepository->findOneByEmail($identifier);
 
         if (null === $user) {
             throw new UserNotFoundException();

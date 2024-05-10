@@ -1,5 +1,16 @@
 App\Security\Domain\Model\Entity\User:
   user_{1..10}:
-    __factory: { '@security.alice.factories.user::create': ['<current()>', 'waiting_for_confirmation'] }
-  user_{11..100}:
-    __factory: { '@security.alice.factories.user::create': ['<current()>', 'active'] }
+    __factory: { register: ['admin+<current()>\@email.com', '<password()>'] }
+    __calls:
+      - sendVerificationCode: ['@verification_code_<current()>']
+  user_{11..20}:
+    __factory: { register: ['admin+<current()>\@email.com', '<password()>'] }
+    __calls:
+      - sendVerificationCode: ['@verification_code_<current()>']
+      - verify: ['<otp($current)>']
+  user_{21..100}:
+    __factory: { register: ['admin+<current()>\@email.com', '<password()>'] }
+    __calls:
+      - sendVerificationCode: ['@verification_code_<current()>']
+      - verify: ['<otp($current)>']
+      - complete: ['<firstName()>', '<lastName()>', '<company()>', '<phoneNumber()>']

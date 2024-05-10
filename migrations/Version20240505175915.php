@@ -12,16 +12,10 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20240505175915 extends AbstractMigration
 {
-    public function getDescription(): string
-    {
-        return '';
-    }
-
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE TYPE security_status AS ENUM(\'waiting_for_confirmation\', \'active\')');
         $this->addSql(<<<SQL
-            CREATE FUNCTION GENERATE_ONE_TIME_PASSWORD() 
+            CREATE FUNCTION GENERATE_OTP_CODE() 
                 RETURNS VARCHAR(6) 
                 LANGUAGE plpgsql
                 AS $$
@@ -32,7 +26,7 @@ final class Version20240505175915 extends AbstractMigration
                 INTO new_one_time_password
                 FROM (SELECT (trunc((random() * (999999 - 1)) + 1)) as new_code
                       FROM generate_series(1, 99999)) AS codes
-                WHERE to_char(codes.new_code, 'FM000000') NOT IN (SELECT one_time_password FROM core_pending_one_time_password)
+                WHERE to_char(codes.new_code, 'FM000000') NOT IN (SELECT code FROM security_verification_code)
                 LIMIT 1;
                 RETURN new_one_time_password;
             END;
@@ -42,7 +36,6 @@ final class Version20240505175915 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->addSql('DROP TYPE security_status');
-        $this->addSql('DROP FUNCTION GENERATE_ONE_TIME_PASSWORD');
+        $this->addSql('DROP FUNCTION GENERATE_OTP_CODE');
     }
 }

@@ -34,7 +34,6 @@ framework:
 
     routing:
       App\Core\Domain\Application\CQRS\Message\Event: async
-      App\Core\Domain\Application\CQRS\Message\AsyncCommand: async
 
 when@dev:
   framework:
