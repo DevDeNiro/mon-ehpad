@@ -19,7 +19,9 @@ final class InvalidStateException extends DomainException
                 'L\'utilisateur (id: %s) est déjà vérifié.',
                 $user->getId(),
             ),
-            ['user' => $user]
+            [
+                'user' => $user,
+            ]
         );
     }
 
@@ -30,7 +32,9 @@ final class InvalidStateException extends DomainException
                 'L\'utilisateur (id: %s) n\'est pas vérifié.',
                 $user->getId(),
             ),
-            ['user' => $user]
+            [
+                'user' => $user,
+            ]
         );
     }
 
@@ -41,7 +45,9 @@ final class InvalidStateException extends DomainException
                 'L\'utilisateur (id: %s) n\'a pas de code de vérification.',
                 $user->getId(),
             ),
-            ['user' => $user]
+            [
+                'user' => $user,
+            ]
         );
     }
 
@@ -52,7 +58,9 @@ final class InvalidStateException extends DomainException
                 'Le code de vérification de l\'utilisateur (id: %s) a expiré.',
                 $user->getId(),
             ),
-            ['user' => $user]
+            [
+                'user' => $user,
+            ]
         );
     }
 
@@ -63,7 +71,10 @@ final class InvalidStateException extends DomainException
                 'Le code de vérification de l\'utilisateur (id: %s) est invalide.',
                 $user->getId(),
             ),
-            ['user' => $user, 'verificationCode' => $verificationCode]
+            [
+                'user' => $user,
+                'verificationCode' => $verificationCode,
+            ]
         );
     }
 }

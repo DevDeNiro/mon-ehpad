@@ -34,7 +34,7 @@ final class ChronosType extends Type
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
-        if (null === $value) {
+        if ($value === null) {
             return null;
         }
 

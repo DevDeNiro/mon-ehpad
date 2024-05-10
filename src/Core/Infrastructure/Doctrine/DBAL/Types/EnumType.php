@@ -19,8 +19,6 @@ abstract class EnumType extends Type
     abstract public function getEnum(): string;
 
     /**
-     * @param $value
-     * @param AbstractPlatform $platform
      * @return null|T
      */
     public function convertToPHPValue($value, AbstractPlatform $platform): mixed
@@ -34,8 +32,6 @@ abstract class EnumType extends Type
 
     /**
      * @param mixed $value
-     * @param AbstractPlatform $platform
-     * @return int|string|null
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform): null|int|string
     {

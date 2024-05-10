@@ -10,8 +10,9 @@ use App\Security\Domain\Model\Entity\Company;
 
 final readonly class Handler implements CommandHandler
 {
-    public function __construct(private CompanyRepository $companyRepository)
-    {
+    public function __construct(
+        private CompanyRepository $companyRepository
+    ) {
     }
 
     public function __invoke(Input $input): void

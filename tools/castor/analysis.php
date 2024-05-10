@@ -11,7 +11,8 @@ function analysis(): void
 {
     io()->title('Run quality analysis');
     analysisPhpStan();
-    analysisPhpMd();
+    analysisRector();
+    analysisEcs();
     analysisComposer();
     analysisDoctrine();
     analysisTwig();

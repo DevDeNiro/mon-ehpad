@@ -7,7 +7,6 @@ namespace App\Core\Infrastructure\Symfony\HttpKernel\Exception;
 use App\Core\Domain\Validation\Assert;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Messenger\Exception\ValidationFailedException as MessengerValidationFailedException;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
@@ -27,7 +26,7 @@ final class ValidationFailedExceptionMapper implements ExceptionMapper
             $throwable,
             [
                 ValidationFailedException::class,
-                MessengerValidationFailedException::class
+                MessengerValidationFailedException::class,
             ]
         );
 

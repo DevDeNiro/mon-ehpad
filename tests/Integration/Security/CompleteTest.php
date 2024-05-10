@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Security;
 
-use App\Security\Domain\Application\Repository\UserRepository;
-use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Enum\Status;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -109,7 +107,9 @@ final class CompleteTest extends ApiTestCase
     {
         $this->login();
 
-        $this->post('/api/security/complete', ['fail' => '']);
+        $this->post('/api/security/complete', [
+            'fail' => '',
+        ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         self::assertMatchesOpenApiResponse();

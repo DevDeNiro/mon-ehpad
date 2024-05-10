@@ -16,10 +16,12 @@ final class UserNotFoundException extends DomainException
     {
         parent::__construct(
             sprintf(
-                'L\'utilisateur (id: %s) n\'existe pas.',
+                "L'utilisateur (id: %s) n'existe pas.",
                 $id,
             ),
-            ['id' => $id]
+            [
+                'id' => $id,
+            ]
         );
     }
 }

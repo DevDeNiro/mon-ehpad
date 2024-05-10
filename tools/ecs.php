@@ -14,4 +14,4 @@ return ECSConfig::configure()
     ])
     ->withParallel(maxNumberOfProcess: 8)
     ->withCache(__DIR__ . '/var/.ecs_cache')
-    ->withPreparedSets(psr12: true, common: true);
+    ->withPreparedSets(psr12: true);

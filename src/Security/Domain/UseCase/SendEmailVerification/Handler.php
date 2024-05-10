@@ -10,7 +10,6 @@ use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Application\Repository\VerificationCodeRepository;
 use App\Security\Domain\Model\Entity\VerificationCode;
 use App\Security\Domain\Model\Event\UserRegistered;
-use App\Security\Domain\Model\Exception\InvalidStateException;
 use App\Security\Domain\Model\Exception\UserNotFoundException;
 use App\Security\Domain\Model\Notification\VerificationEmail;
 
@@ -27,7 +26,7 @@ final readonly class Handler implements EventHandler
     {
         $user = $this->userRepository->findOneById($userRegistered->userId);
 
-        if (null === $user) {
+        if ($user === null) {
             throw new UserNotFoundException($userRegistered->userId);
         }
 

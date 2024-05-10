@@ -20,7 +20,7 @@ final class Assert extends \Webmozart\Assert\Assert
             throw new InvalidArgumentException(sprintf('Invalid phone number. Got: %s', $value));
         }
 
-        Assert::true(
+        self::true(
             $util->isValidNumber($phoneNumber),
             $message ?? sprintf('Invalid phone number. Got: %s', $value)
         );

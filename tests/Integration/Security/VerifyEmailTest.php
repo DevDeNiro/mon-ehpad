@@ -23,7 +23,9 @@ final class VerifyEmailTest extends ApiTestCase
     {
         $this->login();
 
-        $this->post('/api/security/verify-email', ['code' => '000001']);
+        $this->post('/api/security/verify-email', [
+            'code' => '000001',
+        ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertMatchesOpenApiResponse();
@@ -40,7 +42,9 @@ final class VerifyEmailTest extends ApiTestCase
     {
         $user = $this->login('admin+21@email.com');
 
-        $this->post('/api/security/verify-email', ['code' => '000001']);
+        $this->post('/api/security/verify-email', [
+            'code' => '000001',
+        ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
         self::assertMatchesOpenApiResponse();
@@ -57,7 +61,9 @@ final class VerifyEmailTest extends ApiTestCase
     {
         $user = $this->login();
 
-        $this->post('/api/security/verify-email', ['code' => '999999']);
+        $this->post('/api/security/verify-email', [
+            'code' => '999999',
+        ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
         self::assertMatchesOpenApiResponse();
@@ -76,7 +82,9 @@ final class VerifyEmailTest extends ApiTestCase
 
         Chronos::setTestNow('+16 minutes');
 
-        $this->post('/api/security/verify-email', ['code' => '000001']);
+        $this->post('/api/security/verify-email', [
+            'code' => '000001',
+        ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
         self::assertMatchesOpenApiResponse();
@@ -84,7 +92,7 @@ final class VerifyEmailTest extends ApiTestCase
             'message' => sprintf(
                 'Le code de vérification de l\'utilisateur (id: %s) a expiré.',
                 $user->getId()
-            )
+            ),
         ]);
     }
 
@@ -97,7 +105,9 @@ final class VerifyEmailTest extends ApiTestCase
     {
         $this->login();
 
-        $this->post('/api/security/verify-email', ['code' => $code]);
+        $this->post('/api/security/verify-email', [
+            'code' => $code,
+        ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         self::assertMatchesOpenApiResponse();
@@ -123,7 +133,7 @@ final class VerifyEmailTest extends ApiTestCase
             'code' => 'fail',
             'expectedResponse' => [
                 [
-                    'message' => 'Cette valeur n\'est pas valide.',
+                    'message' => "Cette valeur n'est pas valide.",
                     'propertyPath' => 'code',
                 ],
             ],
@@ -135,7 +145,9 @@ final class VerifyEmailTest extends ApiTestCase
     {
         $this->login();
 
-        $this->post('/api/security/verify-email', ['fail' => '']);
+        $this->post('/api/security/verify-email', [
+            'fail' => '',
+        ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         self::assertMatchesOpenApiResponse();
@@ -144,7 +156,9 @@ final class VerifyEmailTest extends ApiTestCase
     #[Test]
     public function shouldReturnUnauthorized(): void
     {
-        $this->post('/api/security/verify-email', ['code' => '000001']);
+        $this->post('/api/security/verify-email', [
+            'code' => '000001',
+        ]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         self::assertMatchesOpenApiResponse();

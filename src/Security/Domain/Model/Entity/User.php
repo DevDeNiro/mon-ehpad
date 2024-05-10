@@ -73,7 +73,7 @@ class User
             throw InvalidStateException::alreadyVerified($this);
         }
 
-        if (null === $this->verificationCode) {
+        if (!$this->verificationCode instanceof VerificationCode) {
             throw InvalidStateException::noVerificationCode($this);
         }
 

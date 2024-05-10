@@ -6,7 +6,6 @@ namespace Tests\Fixtures\Security\Doctrine\Repository;
 
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
-use App\Security\Domain\Model\Exception\InvalidStateException;
 use Symfony\Component\Uid\Ulid;
 
 final class FakeUserRepository implements UserRepository

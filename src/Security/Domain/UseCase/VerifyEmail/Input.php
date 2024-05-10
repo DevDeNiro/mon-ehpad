@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class Input implements Command
 {
     #[Assert\NotBlank]
-    #[Assert\Regex(pattern: '/^[0-9]{6}$/')]
+    #[Assert\Regex(pattern: '/^\d{6}$/')]
     public string $code;
 
     public User $user;

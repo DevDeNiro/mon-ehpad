@@ -7,7 +7,6 @@ namespace Tests\Integration\Security;
 use App\Core\Domain\Model\ValueObject\Email;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
-use App\Security\Domain\Model\Event\UserRegistered;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;

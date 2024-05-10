@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use App\Core\Domain\Application\CQRS\EventBus;
 use App\Core\Domain\Validation\Assert;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
@@ -13,9 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Safe\Exceptions\JsonException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\Fixtures\Core\Infrastructure\Symfony\CQRS\FakeEventBus;
 use function Safe\json_encode;
 
 abstract class ApiTestCase extends WebTestCase
@@ -25,6 +22,27 @@ abstract class ApiTestCase extends WebTestCase
     protected function setUp(): void
     {
         self::createClient();
+    }
+
+    /**
+     * @template T of object
+     * @param class-string<T> $id
+     * @return T
+     */
+    public function getService(string $id): object
+    {
+        /** @var T $service */
+        $service = self::getContainer()->get($id);
+
+        return $service;
+    }
+
+    public function refresh(object $entity): void
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+
+        $entityManager->refresh($entity);
     }
 
     protected function login(string $email = 'admin+1@email.com'): User
@@ -73,26 +91,5 @@ abstract class ApiTestCase extends WebTestCase
         $response = $client->getResponse();
 
         return $response;
-    }
-
-    /**
-     * @template T of object
-     * @param class-string<T> $id
-     * @return T
-     */
-    public function getService(string $id): object
-    {
-        /** @var T $service */
-        $service = self::getContainer()->get($id);
-
-        return $service;
-    }
-
-    public function refresh(object $entity): void
-    {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-
-        $entityManager->refresh($entity);
     }
 }

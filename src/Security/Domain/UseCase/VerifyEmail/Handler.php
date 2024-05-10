@@ -10,8 +10,9 @@ use App\Security\Domain\Model\Entity\VerificationCode;
 
 final readonly class Handler implements CommandHandler
 {
-    public function __construct(private VerificationCodeRepository $verificationCodeRepository)
-    {
+    public function __construct(
+        private VerificationCodeRepository $verificationCodeRepository
+    ) {
     }
 
     public function __invoke(Input $input): void

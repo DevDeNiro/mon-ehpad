@@ -6,7 +6,6 @@ namespace App\Security\Infrastructure\Doctrine\DBAL\Types;
 
 use App\Core\Infrastructure\Doctrine\DBAL\Types\EnumType;
 use App\Security\Domain\Model\Enum\Status;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
  * @extends EnumType<Status>

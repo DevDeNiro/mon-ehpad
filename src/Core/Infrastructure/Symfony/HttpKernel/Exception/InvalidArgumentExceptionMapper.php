@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Core\Infrastructure\Symfony\HttpKernel\Exception;
 
 use App\Core\Domain\Validation\Assert;
-use App\Core\Infrastructure\Symfony\HttpKernel\Exception\ExceptionMapper;
-use App\Security\Domain\Model\Exception\InvalidStateException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;

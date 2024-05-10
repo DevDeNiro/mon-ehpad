@@ -52,7 +52,6 @@
         "hautelook/alice-bundle": "^2.14",
         "league/openapi-psr7-validator": "^0.22.0",
         "nyholm/psr7": "^1.8",
-        "phpmd/phpmd": "^2.15",
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-deprecation-rules": "^1.1",
         "phpstan/phpstan-doctrine": "^1.3",

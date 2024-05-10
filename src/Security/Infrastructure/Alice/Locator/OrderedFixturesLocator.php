@@ -11,17 +11,16 @@ final readonly class OrderedFixturesLocator implements FixtureLocatorInterface
 {
     use IsAServiceTrait;
 
-    public function __construct(private FixtureLocatorInterface $decoratedFixtureLocator)
-    {
+    public function __construct(
+        private FixtureLocatorInterface $decoratedFixtureLocator
+    ) {
     }
 
     public function locateFiles(array $bundles, string $environment): array
     {
         $files = $this->decoratedFixtureLocator->locateFiles($bundles, $environment);
 
-        /**
-         * @var array<string, array{file: string, order: int}> $files
-         */
+        /** @var array<string, array{file: string, order: int}> $files */
         $files = array_combine(
             array_map('basename', $files),
             array_map(

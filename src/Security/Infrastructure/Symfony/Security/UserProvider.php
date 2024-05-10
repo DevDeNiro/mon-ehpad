@@ -15,8 +15,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 final readonly class UserProvider implements UserProviderInterface
 {
-    public function __construct(private UserRepository $userRepository)
-    {
+    public function __construct(
+        private UserRepository $userRepository
+    ) {
     }
 
     public function refreshUser(UserInterface $user): SymfonyUser
@@ -37,7 +38,7 @@ final readonly class UserProvider implements UserProviderInterface
     {
         $user = $this->userRepository->findOneByEmail($identifier);
 
-        if (null === $user) {
+        if ($user === null) {
             throw new UserNotFoundException();
         }
 

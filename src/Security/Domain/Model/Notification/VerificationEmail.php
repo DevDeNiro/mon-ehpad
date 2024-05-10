@@ -10,8 +10,9 @@ use App\Security\Domain\Model\Entity\User;
 
 final readonly class VerificationEmail implements Notification
 {
-    public function __construct(private User $user)
-    {
+    public function __construct(
+        private User $user
+    ) {
     }
 
     public function getSubject(): string
@@ -36,7 +37,9 @@ final readonly class VerificationEmail implements Notification
     {
         Assert::notNull($this->user->getVerificationCode());
 
-        return ['otp' => $this->user->getVerificationCode()->getCode()];
+        return [
+            'otp' => $this->user->getVerificationCode()->getCode(),
+        ];
     }
 
     public function getContent(): null

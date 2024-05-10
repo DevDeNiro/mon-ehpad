@@ -18,8 +18,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final readonly class MessageValueResolver implements ValueResolverInterface
 {
-    public function __construct(private SerializerInterface $serializer, private ValidatorInterface $validator)
-    {
+    public function __construct(
+        private SerializerInterface $serializer,
+        private ValidatorInterface $validator
+    ) {
     }
 
     /**
@@ -30,8 +32,8 @@ final readonly class MessageValueResolver implements ValueResolverInterface
         if (
             $argument->getType() === null
             || (
-                ! is_subclass_of($argument->getType(), Query::class)
-                && ! is_subclass_of($argument->getType(), Command::class)
+                !is_subclass_of($argument->getType(), Query::class)
+                && !is_subclass_of($argument->getType(), Command::class)
             )
         ) {
             return [];
@@ -57,8 +59,8 @@ final readonly class MessageValueResolver implements ValueResolverInterface
             }
 
             return [$data];
-        } catch (ExceptionInterface $e) {
-            throw new BadRequestHttpException('Invalid JSON body.', $e);
+        } catch (ExceptionInterface $exception) {
+            throw new BadRequestHttpException('Invalid JSON body.', $exception);
         }
     }
 }

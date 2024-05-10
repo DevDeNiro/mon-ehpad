@@ -7,16 +7,13 @@ namespace Tests\Unit\Security;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Domain\Model\Entity\VerificationCode;
 use App\Security\Domain\Model\Enum\Status;
-use App\Security\Domain\Model\Event\UserRegistered;
 use App\Security\Domain\Model\Exception\InvalidStateException;
 use App\Security\Domain\UseCase\Complete\Handler;
 use App\Security\Domain\UseCase\Complete\Input;
-use App\Security\Domain\Validation\Validator\UniqueEmailValidator;
 use Cake\Chronos\Chronos;
-use Tests\Fixtures\Security\Doctrine\Repository\FakeCompanyRepository;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Fixtures\Security\Application\Hasher\FakePasswordHasher;
+use Tests\Fixtures\Security\Doctrine\Repository\FakeCompanyRepository;
 use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
 use Tests\Unit\UseCaseTestCase;
 
@@ -160,6 +157,7 @@ final class CompleteTest extends UseCaseTestCase
         $user = User::register('user@email.com', 'hashed_password');
         $user->sendVerificationCode(VerificationCode::create('000000'));
         $user->verify('000000');
+
         $this->userRepository->insert($user);
         return $user;
     }

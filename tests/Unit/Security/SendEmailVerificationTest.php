@@ -12,8 +12,8 @@ use App\Security\Domain\Model\Notification\VerificationEmail;
 use App\Security\Domain\UseCase\SendEmailVerification\Handler;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Uid\Ulid;
-use Tests\Fixtures\Security\Doctrine\Repository\FakeVerificationCodeRepository;
 use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
+use Tests\Fixtures\Security\Doctrine\Repository\FakeVerificationCodeRepository;
 use Tests\Unit\UseCaseTestCase;
 
 final class SendEmailVerificationTest extends UseCaseTestCase
@@ -47,7 +47,7 @@ final class SendEmailVerificationTest extends UseCaseTestCase
     {
         $id = new Ulid();
         self::expectException(UserNotFoundException::class);
-        self::expectExceptionMessage(sprintf('L\'utilisateur (id: %s) n\'existe pas.', $id));
+        self::expectExceptionMessage(sprintf("L'utilisateur (id: %s) n'existe pas.", $id));
         $this->handle(new UserRegistered($id));
     }
 

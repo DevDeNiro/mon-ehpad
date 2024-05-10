@@ -10,8 +10,9 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 final class UniqueEmailValidator extends ConstraintValidator
 {
-    public function __construct(private readonly UserRepository $userRepository)
-    {
+    public function __construct(
+        private readonly UserRepository $userRepository
+    ) {
     }
 
     public function validate(mixed $value, Constraint $constraint): void

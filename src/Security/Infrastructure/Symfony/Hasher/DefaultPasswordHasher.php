@@ -12,8 +12,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 final readonly class DefaultPasswordHasher implements PasswordHasher
 {
-    public function __construct(private UserPasswordHasherInterface $userPasswordHasher)
-    {
+    public function __construct(
+        private UserPasswordHasherInterface $userPasswordHasher
+    ) {
     }
 
     public function hash(string $plainPassword): string

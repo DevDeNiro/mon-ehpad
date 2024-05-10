@@ -26,11 +26,11 @@ use Tests\ReflectionTrait;
 
 abstract class UseCaseTestCase extends TestCase
 {
-    use UseCaseAssertionsTrait,
-        EventBusAssertionsTrait,
-        NotifierAssertionsTrait,
-        FakerTrait,
-        ReflectionTrait;
+    use UseCaseAssertionsTrait;
+    use EventBusAssertionsTrait;
+    use NotifierAssertionsTrait;
+    use FakerTrait;
+    use ReflectionTrait;
 
     protected null|QueryHandler|CommandHandler|EventHandler $useCase = null;
 
@@ -42,7 +42,7 @@ abstract class UseCaseTestCase extends TestCase
 
     public static function eventBus(): FakeEventBus
     {
-        if (! self::$fakeEventBus instanceof FakeEventBus) {
+        if (!self::$fakeEventBus instanceof FakeEventBus) {
             self::$fakeEventBus = new FakeEventBus();
         }
 
@@ -51,7 +51,7 @@ abstract class UseCaseTestCase extends TestCase
 
     public static function notifier(): FakeEmailNotifier
     {
-        if (! self::$fakeNotifier instanceof FakeEmailNotifier) {
+        if (!self::$fakeNotifier instanceof FakeEmailNotifier) {
             self::$fakeNotifier = new FakeEmailNotifier();
         }
 
@@ -99,7 +99,7 @@ abstract class UseCaseTestCase extends TestCase
 
         $reflectionMethod = new \ReflectionMethod($this->useCase, '__invoke');
 
-        if ($reflectionMethod->getReturnType() === null || ! $reflectionMethod->getReturnType() instanceof \ReflectionNamedType) {
+        if ($reflectionMethod->getReturnType() === null || !$reflectionMethod->getReturnType() instanceof \ReflectionNamedType) {
             throw new \RuntimeException('Use case must have a return type.');
         }
 
@@ -126,7 +126,7 @@ abstract class UseCaseTestCase extends TestCase
 
     private function validate(Query|Command|Event $input): void
     {
-        if (null === self::$validator) {
+        if (!self::$validator instanceof \Symfony\Component\Validator\Validator\ValidatorInterface) {
             $this->setValidator([]);
         }
 

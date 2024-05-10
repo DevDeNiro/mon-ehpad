@@ -13,10 +13,8 @@ use App\Security\Domain\UseCase\VerifyEmail\Input;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Symfony\Component\Validator\Constraints\ExpressionValidator;
-use Tests\Fixtures\Security\Doctrine\Repository\FakeVerificationCodeRepository;
 use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
+use Tests\Fixtures\Security\Doctrine\Repository\FakeVerificationCodeRepository;
 use Tests\Unit\UseCaseTestCase;
 
 final class VerifyEmailTest extends UseCaseTestCase

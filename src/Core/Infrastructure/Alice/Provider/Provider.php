@@ -6,5 +6,4 @@ namespace App\Core\Infrastructure\Alice\Provider;
 
 interface Provider
 {
-
 }
