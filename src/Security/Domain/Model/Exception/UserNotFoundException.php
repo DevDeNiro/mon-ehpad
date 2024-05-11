@@ -8,19 +8,32 @@ use App\Core\Domain\Model\Exception\DomainException;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * @extends DomainException<array{id: Ulid}>
+ * @extends DomainException<array{id: Ulid}|array{email: string}>
  */
 final class UserNotFoundException extends DomainException
 {
-    public function __construct(Ulid $id)
+    public static function idNotFound(Ulid $userId): self
     {
-        parent::__construct(
+        return new self(
             sprintf(
                 "L'utilisateur (id: %s) n'existe pas.",
-                $id,
+                $userId,
             ),
             [
-                'id' => $id,
+                'id' => $userId,
+            ]
+        );
+    }
+
+    public static function emailNotFound(string $email): self
+    {
+        return new self(
+            sprintf(
+                "L'utilisateur (email: %s) n'existe pas.",
+                $email,
+            ),
+            [
+                'email' => $email,
             ]
         );
     }

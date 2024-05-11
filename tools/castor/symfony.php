@@ -69,7 +69,7 @@ function router(
     ?string $name = null
 ): void {
     io()->title('Debug router');
-    $command = ['php bin/console debug:router'];
+    $command = ['php', 'bin/console', 'debug:router'];
     if ($name !== null) {
         $command[] = $name;
     }

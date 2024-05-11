@@ -17,18 +17,18 @@ use Tests\Unit\UseCaseTestCase;
 
 final class SignUpTest extends UseCaseTestCase
 {
-    private FakeUserRepository $fakeUserRepository;
+    private FakeUserRepository $userRepository;
 
     protected function setUp(): void
     {
-        $this->fakeUserRepository = new FakeUserRepository();
+        $this->userRepository = new FakeUserRepository();
         $this->setValidator([
-            UniqueEmailValidator::class => new UniqueEmailValidator($this->fakeUserRepository),
+            UniqueEmailValidator::class => new UniqueEmailValidator($this->userRepository),
         ]);
 
         $this->setUseCase(
             new Handler(
-                $this->fakeUserRepository,
+                $this->userRepository,
                 new FakePasswordHasher(),
                 self::eventBus(),
             )
@@ -46,7 +46,7 @@ final class SignUpTest extends UseCaseTestCase
 
         $this->handle($input);
 
-        $user = $this->fakeUserRepository->findOneByEmail($input->email);
+        $user = $this->userRepository->findOneByEmail($input->email);
 
         self::assertNotNull($user);
         self::assertSame('hashed_password', $user->getPassword());

@@ -8,6 +8,7 @@ use App\Core\Domain\Validation\Assert;
 use App\Security\Domain\Application\Repository\UserRepository;
 use App\Security\Domain\Model\Entity\User;
 use App\Security\Infrastructure\Symfony\Security\SymfonyUser;
+use Cake\Chronos\Chronos;
 use Doctrine\ORM\EntityManagerInterface;
 use Safe\Exceptions\JsonException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -22,6 +23,7 @@ abstract class ApiTestCase extends WebTestCase
     protected function setUp(): void
     {
         self::createClient();
+        Chronos::setTestNow();
     }
 
     /**

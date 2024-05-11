@@ -4,6 +4,8 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
+    bind:
+      string $signingKey: '%env(APP_SECRET)%'
 
   _instanceof:
     App\Core\Domain\Application\CQRS\Handler\CommandHandler:

@@ -7,6 +7,8 @@ namespace App\Core\Infrastructure\Symfony\EventSubscriber;
 use App\Core\Infrastructure\Symfony\HttpKernel\Exception\ExceptionMapper;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -38,5 +40,7 @@ final readonly class ApiExceptionSubscriber implements EventSubscriberInterface
                 return;
             }
         }
+
+        $exceptionEvent->setResponse(new JsonResponse($throwable->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR));
     }
 }

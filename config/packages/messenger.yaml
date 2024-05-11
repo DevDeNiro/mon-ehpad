@@ -34,6 +34,7 @@ framework:
 
     routing:
       App\Core\Domain\Application\CQRS\Message\Event: async
+      App\Security\Domain\UseCase\RequestForgottenPassword\Input: async
 
 when@dev:
   framework:

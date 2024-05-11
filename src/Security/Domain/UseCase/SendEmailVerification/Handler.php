@@ -27,7 +27,7 @@ final readonly class Handler implements EventHandler
         $user = $this->userRepository->findOneById($userRegistered->userId);
 
         if ($user === null) {
-            throw new UserNotFoundException($userRegistered->userId);
+            throw UserNotFoundException::idNotFound($userRegistered->userId);
         }
 
         $verificationCode = VerificationCode::create($this->verificationCodeRepository->generateCode());
