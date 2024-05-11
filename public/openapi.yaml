@@ -59,6 +59,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerErrorResponse'
+  /api/security/send-email-verification:
+    post:
+      tags:
+        - Security
+      summary: Send Email Verification
+      description: Send an email verification to a new organization administrator
+      operationId: sendEmailVerification
+      responses:
+        204:
+          description: No content
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
   /api/security/verify-email:
     post:
       tags:
