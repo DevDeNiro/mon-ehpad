@@ -4,30 +4,30 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Security;
 
-use App\Security\Domain\Model\Entity\User;
-use App\Security\Domain\Model\Entity\VerificationCode;
-use App\Security\Domain\Model\Enum\Status;
-use App\Security\Domain\Model\Exception\InvalidStateException;
-use App\Security\Domain\UseCase\VerifyEmail\Handler;
-use App\Security\Domain\UseCase\VerifyEmail\Input;
+use App\Application\UseCase\VerifyEmail\VerifyEmailHandler;
+use App\Application\UseCase\VerifyEmail\VerifyEmailInput;
+use App\Domain\Security\Model\VerificationCode;
+use App\Domain\User\Enum\Status;
+use App\Domain\User\Exception\InvalidStateException;
+use App\Domain\User\Model\User;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
+use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepositoryPort;
 use Tests\Fixtures\Security\Doctrine\Repository\FakeVerificationCodeRepository;
 use Tests\Unit\UseCaseTestCase;
 
 final class VerifyEmailTest extends UseCaseTestCase
 {
-    private FakeUserRepository $userRepository;
+    private FakeUserRepositoryPort $userRepository;
 
     private FakeVerificationCodeRepository $verificationCodeRepository;
 
     protected function setUp(): void
     {
-        $this->userRepository = new FakeUserRepository();
+        $this->userRepository = new FakeUserRepositoryPort();
         $this->verificationCodeRepository = new FakeVerificationCodeRepository();
-        $this->setUseCase(new Handler($this->verificationCodeRepository));
+        $this->setUseCase(new VerifyEmailHandler($this->verificationCodeRepository));
     }
 
     #[Test]
@@ -35,7 +35,7 @@ final class VerifyEmailTest extends UseCaseTestCase
     {
         $user = $this->registerUser();
 
-        $input = new Input();
+        $input = new VerifyEmailInput();
         $input->code = '000000';
         $input->user = $user;
 
@@ -51,7 +51,7 @@ final class VerifyEmailTest extends UseCaseTestCase
 
         $user->verify('000000');
 
-        $input = new Input();
+        $input = new VerifyEmailInput();
         $input->code = '000000';
         $input->user = $user;
 
@@ -71,7 +71,7 @@ final class VerifyEmailTest extends UseCaseTestCase
     {
         $user = $this->registerUser();
 
-        $input = new Input();
+        $input = new VerifyEmailInput();
         $input->code = '000001';
         $input->user = $user;
 
@@ -93,7 +93,7 @@ final class VerifyEmailTest extends UseCaseTestCase
 
         self::setTestNow(new Chronos('+16 minutes'));
 
-        $input = new Input();
+        $input = new VerifyEmailInput();
         $input->code = '000000';
         $input->user = $user;
 
@@ -115,7 +115,7 @@ final class VerifyEmailTest extends UseCaseTestCase
 
         self::setValue($user, 'verificationCode', null);
 
-        $input = new Input();
+        $input = new VerifyEmailInput();
         $input->code = '000000';
         $input->user = $user;
 
@@ -135,7 +135,7 @@ final class VerifyEmailTest extends UseCaseTestCase
      */
     #[Test]
     #[DataProvider('provideInvalidData')]
-    public function shouldRaiseValidationFailedException(array $expectedViolations, Input $input): void
+    public function shouldRaiseValidationFailedException(array $expectedViolations, VerifyEmailInput $input): void
     {
         $this->expectViolations($expectedViolations);
         $this->handle($input);
@@ -144,7 +144,7 @@ final class VerifyEmailTest extends UseCaseTestCase
     /**
      * @return iterable<array{
      *     expectedViolations: array<array{propertyPath: string, message: string}>,
-     *     input: Input
+     *     input: VerifyEmailInput
      * }>
      */
     public static function provideInvalidData(): iterable
@@ -170,9 +170,9 @@ final class VerifyEmailTest extends UseCaseTestCase
         ];
     }
 
-    private static function createInput(string $code): Input
+    private static function createInput(string $code): VerifyEmailInput
     {
-        $input = new Input();
+        $input = new VerifyEmailInput();
         $input->code = $code;
 
         return $input;

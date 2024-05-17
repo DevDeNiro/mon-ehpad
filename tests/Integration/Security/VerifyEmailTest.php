@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Security;
 
-use App\Security\Domain\Application\Repository\UserRepository;
-use App\Security\Domain\Model\Entity\User;
-use App\Security\Domain\Model\Enum\Status;
+use App\Domain\User\Enum\Status;
+use App\Domain\User\Model\User;
+use App\Domain\User\Repository\UserRepositoryPort;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -30,7 +30,7 @@ final class VerifyEmailTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertMatchesOpenApiResponse();
 
-        $userRepository = $this->getService(UserRepository::class);
+        $userRepository = $this->getService(UserRepositoryPort::class);
         $user = $userRepository->findOneByEmail('admin+1@email.com');
 
         self::assertInstanceOf(User::class, $user);

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Security\Doctrine\Repository;
 
-use App\Security\Domain\Application\Repository\VerificationCodeRepository;
-use App\Security\Domain\Model\Entity\VerificationCode;
+use App\Domain\Security\Model\VerificationCode;
+use App\Domain\User\Repository\VerificationCodeRepository;
 
 final class FakeVerificationCodeRepository implements VerificationCodeRepository
 {

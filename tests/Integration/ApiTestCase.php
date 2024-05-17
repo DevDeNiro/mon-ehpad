@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use App\Core\Domain\Validation\Assert;
-use App\Security\Domain\Application\Repository\UserRepository;
-use App\Security\Domain\Model\Entity\User;
-use App\Security\Infrastructure\Symfony\Security\SymfonyUser;
+use App\Domain\core\Validation\Assert;
+use App\Domain\User\Model\User;
+use App\Domain\User\Repository\UserRepositoryPort;
+use App\Infrastructure\Security\Symfony\Security\SymfonyUser;
 use Cake\Chronos\Chronos;
 use Doctrine\ORM\EntityManagerInterface;
 use Safe\Exceptions\JsonException;
@@ -49,7 +49,7 @@ abstract class ApiTestCase extends WebTestCase
 
     protected function login(string $email = 'admin+1@email.com'): User
     {
-        $userRepository = $this->getService(UserRepository::class);
+        $userRepository = $this->getService(UserRepositoryPort::class);
         $user = $userRepository->findOneByEmail($email);
 
         Assert::notNull($user);

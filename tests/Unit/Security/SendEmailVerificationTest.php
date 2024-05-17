@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Security;
 
-use App\Security\Domain\Model\Entity\User;
-use App\Security\Domain\Model\Event\UserRegistered;
-use App\Security\Domain\Model\Exception\InvalidStateException;
-use App\Security\Domain\Model\Exception\UserNotFoundException;
-use App\Security\Domain\Model\Notification\VerificationEmail;
-use App\Security\Domain\UseCase\SendEmailVerification\Handler;
+use App\Application\UseCase\SendEmailVerification\SendEmailVerificationHandler;
+use App\Domain\Security\Notification\VerificationEmail;
+use App\Domain\User\Event\UserRegistered;
+use App\Domain\User\Exception\InvalidStateException;
+use App\Domain\User\Exception\UserNotFoundException;
+use App\Domain\User\Model\User;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Uid\Ulid;
-use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
+use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepositoryPort;
 use Tests\Fixtures\Security\Doctrine\Repository\FakeVerificationCodeRepository;
 use Tests\Unit\UseCaseTestCase;
 
 final class SendEmailVerificationTest extends UseCaseTestCase
 {
-    private FakeUserRepository $userRepository;
+    private FakeUserRepositoryPort $userRepository;
 
     protected function setUp(): void
     {
-        $this->userRepository = new FakeUserRepository();
+        $this->userRepository = new FakeUserRepositoryPort();
         $this->setUseCase(
-            new Handler(
+            new SendEmailVerificationHandler(
                 $this->userRepository,
                 new FakeVerificationCodeRepository(),
                 self::notifier()

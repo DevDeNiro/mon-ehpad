@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Security\Application\Hasher;
 
-use App\Security\Domain\Application\Hasher\PasswordHasher;
-use App\Security\Domain\Model\Entity\User;
+use App\Application\Config\Hasher\PasswordHasher;
+use App\Domain\User\Model\User;
 
 final readonly class FakePasswordHasher implements PasswordHasher
 {

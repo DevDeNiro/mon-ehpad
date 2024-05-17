@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Security;
 
-use App\Security\Domain\Application\TokenGenerator\TokenGenerator;
-use App\Security\Domain\Model\Exception\ForgottenPasswordAlreadyRequestedException;
-use App\Security\Domain\Model\Exception\UserNotFoundException;
-use App\Security\Domain\Model\Notification\ResetPasswordEmail;
-use App\Security\Domain\UseCase\RequestForgottenPassword\Handler;
-use App\Security\Domain\UseCase\RequestForgottenPassword\Input;
+use App\Application\Config\TokenGenerator\TokenGenerator;
+use App\Application\UseCase\RequestForgottenPassword\RequestForgottenPasswordHandler;
+use App\Application\UseCase\RequestForgottenPassword\RequestForgottenPasswordInput;
+use App\Domain\Security\Notification\ResetPasswordEmail;
+use App\Domain\User\Exception\ForgottenPasswordAlreadyRequestedException;
+use App\Domain\User\Exception\UserNotFoundException;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Fixtures\Security\Doctrine\Repository\FakeForgottenPasswordRequestRepository;
-use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
+use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepositoryPort;
 use Tests\Unit\UseCaseTestCase;
 
 final class RequestForgottenPasswordTest extends UseCaseTestCase
 {
-    private FakeUserRepository $userRepository;
+    private FakeUserRepositoryPort $userRepository;
 
     private FakeForgottenPasswordRequestRepository $forgottenPasswordRequestRepository;
 
     protected function setUp(): void
     {
-        $this->userRepository = new FakeUserRepository();
+        $this->userRepository = new FakeUserRepositoryPort();
         $this->forgottenPasswordRequestRepository = new FakeForgottenPasswordRequestRepository();
 
         $tokenGenerator = $this->createMock(TokenGenerator::class);
@@ -33,7 +33,7 @@ final class RequestForgottenPasswordTest extends UseCaseTestCase
         $tokenGenerator->method('generateHashedToken')->willReturn('hashed_token');
 
         $this->setUseCase(
-            new Handler(
+            new RequestForgottenPasswordHandler(
                 $this->userRepository,
                 $this->forgottenPasswordRequestRepository,
                 $tokenGenerator,
@@ -45,7 +45,7 @@ final class RequestForgottenPasswordTest extends UseCaseTestCase
     #[Test]
     public function shouldRequestForgottenPassword(): void
     {
-        $input = new Input();
+        $input = new RequestForgottenPasswordInput();
         $input->email = 'admin+1@email.com';
 
         $this->handle($input);
@@ -89,7 +89,7 @@ final class RequestForgottenPasswordTest extends UseCaseTestCase
         $this->expectException(UserNotFoundException::class);
         $this->expectExceptionMessage("L'utilisateur (email: fail@email.com) n'existe pas");
 
-        $input = new Input();
+        $input = new RequestForgottenPasswordInput();
         $input->email = 'fail@email.com';
 
         $this->handle($input);
@@ -105,7 +105,7 @@ final class RequestForgottenPasswordTest extends UseCaseTestCase
     {
         $this->expectViolations($expectedViolations);
 
-        $input = new Input();
+        $input = new RequestForgottenPasswordInput();
         $input->email = $email;
 
         $this->handle($input);

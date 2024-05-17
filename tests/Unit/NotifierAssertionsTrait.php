@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Core\Domain\Application\Notifier\Notification;
+use App\Application\Notifier\Notification;
 
 trait NotifierAssertionsTrait
 {

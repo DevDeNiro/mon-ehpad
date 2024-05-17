@@ -4,31 +4,31 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Security;
 
-use App\Security\Domain\Model\Entity\User;
-use App\Security\Domain\Model\Entity\VerificationCode;
-use App\Security\Domain\Model\Enum\Status;
-use App\Security\Domain\Model\Exception\InvalidStateException;
-use App\Security\Domain\UseCase\Complete\Handler;
-use App\Security\Domain\UseCase\Complete\Input;
+use App\Application\UseCase\CompleteProfile\CompleteProfileHandler;
+use App\Application\UseCase\CompleteProfile\CompleteProfileInput;
+use App\Domain\Security\Model\VerificationCode;
+use App\Domain\User\Enum\Status;
+use App\Domain\User\Exception\InvalidStateException;
+use App\Domain\User\Model\User;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Fixtures\Security\Doctrine\Repository\FakeCompanyRepository;
-use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
+use Tests\Fixtures\Security\Doctrine\Repository\FakeCompanyRepositoryPort;
+use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepositoryPort;
 use Tests\Unit\UseCaseTestCase;
 
 final class CompleteTest extends UseCaseTestCase
 {
-    private FakeUserRepository $userRepository;
+    private FakeUserRepositoryPort $userRepository;
 
-    private FakeCompanyRepository $companyRepository;
+    private FakeCompanyRepositoryPort $companyRepository;
 
     protected function setUp(): void
     {
-        $this->userRepository = new FakeUserRepository();
-        $this->companyRepository = new FakeCompanyRepository();
+        $this->userRepository = new FakeUserRepositoryPort();
+        $this->companyRepository = new FakeCompanyRepositoryPort();
 
-        $this->setUseCase(new Handler($this->companyRepository));
+        $this->setUseCase(new CompleteProfileHandler($this->companyRepository));
     }
 
     #[Test]
@@ -72,7 +72,7 @@ final class CompleteTest extends UseCaseTestCase
      */
     #[Test]
     #[DataProvider('provideInvalidData')]
-    public function shouldRaiseValidationFailedException(array $expectedViolations, Input $input): void
+    public function shouldRaiseValidationFailedException(array $expectedViolations, CompleteProfileInput $input): void
     {
         $this->expectViolations($expectedViolations);
         $this->handle($input);
@@ -81,7 +81,7 @@ final class CompleteTest extends UseCaseTestCase
     /**
      * @return iterable<array{
      *     expectedViolations: array<array{propertyPath: string, message: string}>,
-     *     input: Input
+     *     input: CompleteProfileInput
      * }>
      */
     public static function provideInvalidData(): iterable
@@ -142,8 +142,8 @@ final class CompleteTest extends UseCaseTestCase
         string $lastName = 'Doe',
         string $companyName = 'company',
         string $phoneNumber = '+33123456789'
-    ): Input {
-        $input = new Input();
+    ): CompleteProfileInput {
+        $input = new CompleteProfileInput();
         $input->firstName = $firstName;
         $input->lastName = $lastName;
         $input->companyName = $companyName;

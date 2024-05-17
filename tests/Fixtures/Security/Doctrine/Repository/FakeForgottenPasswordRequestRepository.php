@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Security\Doctrine\Repository;
 
-use App\Security\Domain\Application\Repository\ForgottenPasswordRequestRepository;
-use App\Security\Domain\Model\Entity\ForgottenPasswordRequest;
-use App\Security\Domain\Model\Entity\User;
+use App\Domain\Security\Model\ForgottenPasswordRequest;
+use App\Domain\Security\Repository\ForgottenPasswordRequestRepository;
+use App\Domain\User\Model\User;
 
 final class FakeForgottenPasswordRequestRepository implements ForgottenPasswordRequestRepository
 {

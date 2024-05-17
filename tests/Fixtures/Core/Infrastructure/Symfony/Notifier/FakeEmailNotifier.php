@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Core\Infrastructure\Symfony\Notifier;
 
-use App\Core\Domain\Application\Notifier\Notification;
-use App\Core\Domain\Application\Notifier\Notifier;
+use App\Application\Notifier\Notification;
+use App\Application\Notifier\Notifier;
 
 final class FakeEmailNotifier implements Notifier
 {

@@ -25,7 +25,7 @@ services:
     resource: '../src/'
     exclude:
       - '../src/*/Domain/Model/'
-      - '../src/*/Domain/UseCase/**/Input.php'
+      - '../src/*/Domain/UseCase/**/CompleteProfileInput.php'
       - '../src/*/Domain/UseCase/**/Output.php'
       - '../src/Core/Infrastructure/Symfony/Kernel.php'
       - '../src/*/Infrastructure/Doctrine/Entity/'
@@ -46,7 +46,7 @@ services:
     resource: '../tests/Fixtures/'
     exclude:
       - '../tests/Fixtures/*/Domain/Model/'
-      - '../tests/Fixtures/*/Domain/UseCase/**/Input.php'
+      - '../tests/Fixtures/*/Domain/UseCase/**/CompleteProfileInput.php'
       - '../tests/Fixtures/*/Domain/UseCase/**/Output.php'
       - '../tests/Fixtures/*/Infrastructure/Doctrine/Entity/'
       - '../tests/Fixtures/Core/Infrastructure/Symfony/FakeEventBus.php'

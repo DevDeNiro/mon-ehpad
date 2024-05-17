@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Integration\Security;
 
 use App\Core\Domain\Model\ValueObject\Email;
-use App\Security\Domain\Application\Repository\UserRepository;
-use App\Security\Domain\Model\Entity\User;
+use App\Domain\User\Model\User;
+use App\Domain\User\Repository\UserRepositoryPort;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +29,7 @@ final class SignUpTest extends ApiTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         self::assertMatchesOpenApiResponse();
 
-        $userRepository = $this->getService(UserRepository::class);
+        $userRepository = $this->getService(UserRepositoryPort::class);
         $user = $userRepository->findOneByEmail('user@email.com');
 
         self::assertInstanceOf(User::class, $user);

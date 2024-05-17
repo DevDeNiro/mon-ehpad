@@ -25,7 +25,7 @@ services:
     resource: '../src/'
     exclude:
       - '../src/*/Domain/Model/'
-      - '../src/*/Domain/UseCase/**/Input.php'
+      - '../src/*/Domain/UseCase/**/CompleteProfileInput.php'
       - '../src/*/Domain/UseCase/**/Output.php'
       - '../src/Core/Infrastructure/Symfony/Kernel.php'
       - '../src/*/Infrastructure/Doctrine/Entity/'

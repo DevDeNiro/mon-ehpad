@@ -4,30 +4,30 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Security;
 
-use App\Security\Domain\Model\Event\UserRegistered;
-use App\Security\Domain\UseCase\SignUp\Handler;
-use App\Security\Domain\UseCase\SignUp\Input;
-use App\Security\Domain\Validation\Validator\UniqueEmailValidator;
+use App\Application\UseCase\SignUp\SignUpHandler;
+use App\Application\UseCase\SignUp\SignUpInput;
+use App\Domain\User\Event\UserRegistered;
+use App\Domain\User\Validation\Validator\UniqueEmailValidator;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Fixtures\Security\Application\Hasher\FakePasswordHasher;
-use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepository;
+use Tests\Fixtures\Security\Doctrine\Repository\FakeUserRepositoryPort;
 use Tests\Unit\UseCaseTestCase;
 
 final class SignUpTest extends UseCaseTestCase
 {
-    private FakeUserRepository $userRepository;
+    private FakeUserRepositoryPort $userRepository;
 
     protected function setUp(): void
     {
-        $this->userRepository = new FakeUserRepository();
+        $this->userRepository = new FakeUserRepositoryPort();
         $this->setValidator([
             UniqueEmailValidator::class => new UniqueEmailValidator($this->userRepository),
         ]);
 
         $this->setUseCase(
-            new Handler(
+            new SignUpHandler(
                 $this->userRepository,
                 new FakePasswordHasher(),
                 self::eventBus(),
@@ -40,7 +40,7 @@ final class SignUpTest extends UseCaseTestCase
     {
         self::setTestNow(new Chronos('2024-01-01 00:00:00'));
 
-        $input = new Input();
+        $input = new SignUpInput();
         $input->email = 'user@email.com';
         $input->password = '4234df00-45dd-49a4-b303-a75dbf8b10d8!';
 
@@ -58,7 +58,7 @@ final class SignUpTest extends UseCaseTestCase
      */
     #[Test]
     #[DataProvider('provideInvalidData')]
-    public function shouldRaiseValidationFailedException(array $expectedViolations, Input $input): void
+    public function shouldRaiseValidationFailedException(array $expectedViolations, SignUpInput $input): void
     {
         $this->expectViolations($expectedViolations);
         $this->handle($input);
@@ -67,7 +67,7 @@ final class SignUpTest extends UseCaseTestCase
     /**
      * @return iterable<array{
      *     expectedViolations: array<array{propertyPath: string, message: string}>,
-     *     input: Input
+     *     input: SignUpInput
      * }>
      */
     public static function provideInvalidData(): iterable
@@ -123,9 +123,9 @@ final class SignUpTest extends UseCaseTestCase
         ];
     }
 
-    private static function createInput(string $email, string $password): Input
+    private static function createInput(string $email, string $password): SignUpInput
     {
-        $input = new Input();
+        $input = new SignUpInput();
         $input->email = $email;
         $input->password = $password;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Core\Domain\Application\CQRS\Message\Event;
+use App\Application\CQRS\Message\Event;
 
 trait EventBusAssertionsTrait
 {

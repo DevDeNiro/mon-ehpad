@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Security;
 
-use App\Security\Domain\Model\Enum\Status;
+use App\Domain\User\Enum\Status;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;

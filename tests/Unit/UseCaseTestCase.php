@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Core\Domain\Application\CQRS\Handler\CommandHandler;
-use App\Core\Domain\Application\CQRS\Handler\EventHandler;
-use App\Core\Domain\Application\CQRS\Handler\QueryHandler;
-use App\Core\Domain\Application\CQRS\Message\Command;
-use App\Core\Domain\Application\CQRS\Message\Event;
-use App\Core\Domain\Application\CQRS\Message\Query;
-use App\Core\Domain\Validation\Assert;
+use App\Application\CQRS\Handler\CommandHandler;
+use App\Application\CQRS\Handler\EventHandler;
+use App\Application\CQRS\Handler\QueryHandler;
+use App\Application\CQRS\Message\Command;
+use App\Application\CQRS\Message\Event;
+use App\Application\CQRS\Message\Query;
+use App\Domain\core\Validation\Assert;
 use Cake\Chronos\Chronos;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
